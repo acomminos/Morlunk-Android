@@ -4,3 +4,7 @@
 *.jar
 *.war
 *.ear
+
+# Java/Android gen and bin directories #
+bin/
+gen/
