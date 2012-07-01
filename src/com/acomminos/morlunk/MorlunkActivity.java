@@ -1,11 +1,13 @@
 package com.acomminos.morlunk;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 
 public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNavigationListener {
 
@@ -69,10 +71,22 @@ public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNav
     	}
     	case 1:
     	{
+    		// Load Minecraft page
+    		MorlunkPageFragment pageFragment = new MorlunkPageFragment();
+    		Bundle arguments = new Bundle();
+    		arguments.putString("pageName", "minecraft");
+    		pageFragment.setArguments(arguments);
+    		replacementFragment = pageFragment;
         	break;
     	}
     	case 2:
     	{
+    		// Load Android page
+    		MorlunkPageFragment pageFragment = new MorlunkPageFragment();
+    		Bundle arguments = new Bundle();
+    		arguments.putString("pageName", "android");
+    		pageFragment.setArguments(arguments);
+    		replacementFragment = pageFragment;
         	break;
     	}
     	}
@@ -81,4 +95,28 @@ public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNav
 				.replace(R.id.container, replacementFragment).commit();
         return true;
     }
+    
+    public boolean onMenuItemSelected(int featureId, android.view.MenuItem item) {
+    	switch (item.getItemId()) {
+		case R.id.menu_account:
+			// Start account activity
+			break;
+
+		case R.id.menu_settings:
+			// Start settings activity
+			break;
+		case R.id.menu_about:
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("About");
+			builder.setMessage("Morlunk Co. for Android v1.0\n\n" +
+					"This app was developed by and is currently maintained by Andrew Comminos.\n\n" +
+					"This app's source is licensed under the LGPL. Visit http://www.github.com/Morlunk/Morlunk-Android/ to view the source.");
+			builder.setNegativeButton("Close", null);
+			builder.create().show();
+		}
+		break;
+		}
+    	return true;
+    };
 }

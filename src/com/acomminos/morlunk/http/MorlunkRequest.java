@@ -20,6 +20,8 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class MorlunkRequest {
 	
+	// TODO add authentication headers to GET and POST requests. This is important so that the user can access their Paoso balance and such.
+	
 	public enum MorlunkRequestType {
 		REQUEST_POST,
 		REQUEST_GET

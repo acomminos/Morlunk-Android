@@ -3,4 +3,6 @@
         android:title="@string/menu_settings"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/menu_account" android:title="Account" android:icon="@drawable/ic_action_user_light" android:showAsAction="always"></item>
+    <item android:id="@+id/menu_about" android:orderInCategory="101" android:title="About" android:showAsAction="never"></item>
 </menu>
