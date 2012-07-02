@@ -1,6 +1,5 @@
 package com.acomminos.morlunk;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -17,12 +16,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.acomminos.morlunk.http.MorlunkRequest;
+import com.acomminos.morlunk.http.MorlunkRequest.MorlunkRequestType;
 import com.acomminos.morlunk.http.MorlunkRequestTask;
 import com.acomminos.morlunk.http.MorlunkResponse;
+import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
+import com.acomminos.morlunk.http.response.MorlunkBlogPost;
+import com.acomminos.morlunk.http.response.MorlunkBlogResponse;
 
 public class MorlunkBlogFragment extends ListFragment implements OnLoadCompleteListener<MorlunkResponse> {
 	
 	private static final String BLOG_API_URL = "http://www.morlunk.com/blog/json";
+	
+	private int loaderId = 0;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {;
@@ -38,38 +43,31 @@ public class MorlunkBlogFragment extends ListFragment implements OnLoadCompleteL
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 	
+	@Override
+	public void onDestroyView() {
+		// TODO stop loader
+		super.onDestroyView();
+	}
+	
 	/**
 	 * Loads initial blog posts.
 	 */
 	public void loadPosts() {
-		MorlunkRequest request = new MorlunkRequest(BLOG_API_URL);
+		MorlunkRequest request = new MorlunkRequest(BLOG_API_URL, MorlunkRequestType.REQUEST_GET, MorlunkBlogResponse.class);
 		MorlunkRequestTask requestTask = new MorlunkRequestTask(getActivity(), request);
 		requestTask.registerListener(requestTask.getId(), this);
 		requestTask.forceLoad();
+		// TODO loader management
 	}
 	
 	@Override
 	public void onLoadComplete(Loader<MorlunkResponse> loader,
 			MorlunkResponse response) {
-		if(response != null) {
-			// TODO load
-			// Configure list adapter and parse JSON posts
-			List<MorlunkBlogPost> blogPosts = new ArrayList<MorlunkBlogPost>();
-			/*
-			try {
-				// TODO parse JSON in other class
-				JsonArray posts = response.getResponseJSON().("posts");
-				
-				Gson gson = new Gson();
-				
-				gson.fromJson(json, classOfT)
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
-			
-			setListAdapter(new MorlunkBlogArrayAdapter(getActivity(), blogPosts));
+		if(response != null &&
+				response.result == MorlunkRequestResult.SUCCESS) {
+			MorlunkBlogResponse blogResponse = (MorlunkBlogResponse) response;
+			List<MorlunkBlogPost> posts = blogResponse.posts;
+			setListAdapter(new MorlunkBlogArrayAdapter(getActivity(), posts));
 		} else {
 			AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
 			dialog.setTitle("Error");
@@ -106,8 +104,8 @@ public class MorlunkBlogFragment extends ListFragment implements OnLoadCompleteL
 			TextView title = (TextView) itemView.findViewById(R.id.title);
 			TextView description = (TextView) itemView.findViewById(R.id.description);
 			
-			title.setText(post.getPostTitle());
-			description.setText(post.getPostDescription());
+			title.setText(post.postTitle);
+			description.setText(post.postDescription);
 			
 			return itemView;
 		}

@@ -7,13 +7,14 @@
     <TextView android:id="@+id/title" 
         android:layout_width="fill_parent" 
         android:layout_height="match_parent"
-        android:textSize="14pt"
+        android:textSize="16sp"
         android:lines="1"
         android:ellipsize="end"></TextView>
     <TextView android:id="@+id/description" 
         android:layout_width="fill_parent" 
         android:layout_height="match_parent"
-        android:textSize="9pt"
+        android:textSize="12sp"
+        android:textStyle="italic"
         android:textColor="@android:color/secondary_text_light"
         android:lines="1"
         android:ellipsize="end"></TextView>

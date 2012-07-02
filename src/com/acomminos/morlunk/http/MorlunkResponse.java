@@ -1,7 +1,13 @@
 package com.acomminos.morlunk.http;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.lang.reflect.Type;
+
+import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.annotations.SerializedName;
 
 public class MorlunkResponse {
 	
@@ -12,27 +18,22 @@ public class MorlunkResponse {
 		UNKNOWN,
 		SUCCESS
 	}
-	private String responseJSON;
-	private MorlunkRequestResult error;
 	
-	private MorlunkResponse() {}
-	
-	public static MorlunkResponse parseResponse(String JSON) throws JSONException {
-		JSONObject resultObject = new JSONObject(JSON);
+	@SerializedName("result")
+	public MorlunkRequestResult result;
+}
 
-		// Get error information
-		String resultCode = resultObject.getString("result");
-		MorlunkResponse response = new MorlunkResponse();
-		MorlunkRequestResult error = readResult(resultCode);
+/**
+ * Class so we can deserialize the result string returned as part of the response into an enum.
+ * @author andrew
+ */
+class MorlunkRequestResultDeserializer implements JsonDeserializer<MorlunkRequestResult> {
+
+	@Override
+	public MorlunkRequestResult deserialize(JsonElement arg0, Type arg1,
+			JsonDeserializationContext arg2) throws JsonParseException {
+		String resultCode = arg0.getAsString();
 		
-		response.setError(error);
-		response.setResponseJSON(JSON);
-		
-		return response;
-	}
-	
-	private static MorlunkRequestResult readResult(String resultCode) {
-		// Parse the string returned in the result property.
 		MorlunkRequestResult error;
 		if (resultCode.equals("success")) {
 			error = MorlunkRequestResult.SUCCESS;
@@ -47,22 +48,5 @@ public class MorlunkResponse {
 		}
 		return error;
 	}
-
-	public String getResponseJSON() {
-		return responseJSON;
-	}
-
-	private void setResponseJSON(String responseJSON) {
-		this.responseJSON = responseJSON;
-	}
-
-	public MorlunkRequestResult getError() {
-		return error;
-	}
-
-	private void setError(MorlunkRequestResult error) {
-		this.error = error;
-	}
-	
 	
 }

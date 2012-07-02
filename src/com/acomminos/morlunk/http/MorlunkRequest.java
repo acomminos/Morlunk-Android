@@ -30,9 +30,18 @@ public class MorlunkRequest {
 	private String url;
 	private Map<String, String> arguments = new HashMap<String, String>();
 	private MorlunkRequestType requestType;
+	private Class<? extends MorlunkResponse> responseClass;
 	
-	public MorlunkRequest(String url) {
+	/**
+	 * Creates a new MorlunkRequest with the following parameters.
+	 * @param url The URL to make a request to.
+	 * @param requestType The type of request (GET or POST)
+	 * @param responseClass The class that the response will be deserialized into from JSON via GSON.
+	 */
+	public MorlunkRequest(String url, MorlunkRequestType requestType, Class<? extends MorlunkResponse> responseClass) {
 		this.url = url;
+		this.requestType = requestType;
+		this.responseClass = responseClass;
 	}
 	
 	public HttpPost makePostRequest() throws UnsupportedEncodingException {
@@ -73,7 +82,7 @@ public class MorlunkRequest {
 	public void removeArgument(String key) {
 		this.arguments.remove(key);
 	}
-
+	
 	/**
 	 * @return the url
 	 */
@@ -100,5 +109,19 @@ public class MorlunkRequest {
 	 */
 	public void setRequestType(MorlunkRequestType requestType) {
 		this.requestType = requestType;
+	}
+
+	/**
+	 * @return the responseClass
+	 */
+	public Class<? extends MorlunkResponse> getResponseClass() {
+		return responseClass;
+	}
+
+	/**
+	 * @param responseClass the responseClass to set
+	 */
+	public void setResponseClass(Class<MorlunkResponse> responseClass) {
+		this.responseClass = responseClass;
 	}
 }

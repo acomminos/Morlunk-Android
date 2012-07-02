@@ -12,8 +12,12 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.acomminos.morlunk.http.MorlunkRequest;
+import com.acomminos.morlunk.http.MorlunkRequest.MorlunkRequestType;
 import com.acomminos.morlunk.http.MorlunkRequestTask;
 import com.acomminos.morlunk.http.MorlunkResponse;
+import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
+import com.acomminos.morlunk.http.response.MorlunkPage;
+import com.acomminos.morlunk.http.response.MorlunkPageResponse;
 
 public class MorlunkPageFragment extends Fragment implements OnLoadCompleteListener<MorlunkResponse> {
 	
@@ -25,8 +29,8 @@ public class MorlunkPageFragment extends Fragment implements OnLoadCompleteListe
 	private WebView webView;
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 		
 		// If the page name is passed as an argument, load it
 		if(getArguments().containsKey("pageName")) {
@@ -57,12 +61,17 @@ public class MorlunkPageFragment extends Fragment implements OnLoadCompleteListe
 		return view;
 	}
 	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+	}
+	
 	/**
 	 * Loads the MorlunkPage required into the webview. The JSON parsing should go into its own class, TODO.
 	 * @param pageName
 	 */
 	private void loadPage(String pageName) {
-		MorlunkRequest request = new MorlunkRequest(PAGE_API_URL+pageName+"/json"); // The format is morlunk.com/page/PAGE_NAME/json for API access
+		MorlunkRequest request = new MorlunkRequest(PAGE_API_URL+pageName+"/json", MorlunkRequestType.REQUEST_GET, MorlunkPageResponse.class); // The format is morlunk.com/page/PAGE_NAME/json for API access
 		MorlunkRequestTask task = new MorlunkRequestTask(getActivity(), request);
 		task.registerListener(getId(), this);
 		task.forceLoad();
@@ -71,8 +80,13 @@ public class MorlunkPageFragment extends Fragment implements OnLoadCompleteListe
 	@Override
 	public void onLoadComplete(Loader<MorlunkResponse> loader,
 			MorlunkResponse response) {
-		if(response != null) {
-			// TODO load
+		if(response != null &&
+				response.result == MorlunkRequestResult.SUCCESS) {
+			// Get response object
+			MorlunkPageResponse pageResponse = (MorlunkPageResponse) response;
+			page = pageResponse.page;
+			
+			webView.loadData(page.pageBody, "text/html", "utf-8");
 		} else {
 			AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
 			dialog.setTitle("Error");
