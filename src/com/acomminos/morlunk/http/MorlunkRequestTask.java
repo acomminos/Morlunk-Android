@@ -1,47 +1,26 @@
 package com.acomminos.morlunk.http;
 
-import java.io.IOException;
-
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.os.AsyncTask;
+import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
 
-public class MorlunkRequestTask extends AsyncTask<MorlunkRequest, Void, MorlunkResponse> {
-	
-	public interface MorlunkRequestListener {
-		public void requestCompleted(MorlunkRequest request, MorlunkResponse response);
-		public void requestFailed(MorlunkRequest request);
-	}
+public class MorlunkRequestTask extends AsyncTaskLoader<MorlunkResponse>{
 
-	private MorlunkRequest request;
-	private MorlunkRequestListener listener;
+	private MorlunkRequest morlunkRequest;
 	
-	public MorlunkRequestTask(MorlunkRequestListener listener) {
-		this.listener = listener;
+	public MorlunkRequestTask(Context context, MorlunkRequest request) {
+		super(context);
+		this.morlunkRequest = request;
 	}
 	
 	@Override
-	protected void onPreExecute() {
-		// TODO Auto-generated method stub
-		super.onPreExecute();
-	}
-	
-	/**
-	 * Executes the request with either a GET or POST request to the specified URL, depending on the RequestType property.
-	 * @throws IOException 
-	 * @throws ClientProtocolException 
-	 */
-	@Override
-	protected MorlunkResponse doInBackground(MorlunkRequest... arg0) {
-		MorlunkRequest morlunkRequest = arg0[0];
-		this.request = morlunkRequest; // TODO make this cleaner?
-		
+	public MorlunkResponse loadInBackground() {
 		HttpClient client = new DefaultHttpClient();
 		HttpUriRequest request = null;
 		try {
@@ -63,16 +42,4 @@ public class MorlunkRequestTask extends AsyncTask<MorlunkRequest, Void, MorlunkR
 			return null;
 		}
 	}
-	
-	@Override
-	protected void onPostExecute(MorlunkResponse result) {
-		// If a response value is set, call requestCompleted
-		if(result != null) {
-			listener.requestCompleted(request, result);
-		} else {
-			// Something else happened, no result returned
-			listener.requestFailed(request);
-		}
-	}
-	
 }

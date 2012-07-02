@@ -3,10 +3,6 @@ package com.acomminos.morlunk.http;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
 public class MorlunkResponse {
 	
 	public enum MorlunkRequestResult {

@@ -2,12 +2,19 @@ package com.acomminos.morlunk;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 
 public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNavigationListener {
 
@@ -36,6 +43,15 @@ public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNav
                                 getString(R.string.title_android),
                         }),
                 this);
+        
+        // TODO remove
+        // Sample notification
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+        notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+        notificationBuilder.setContentTitle("Minecraft Server Downtime");
+        notificationBuilder.setContentText("Expected return: 5:50pm");
+        Notification notification = notificationBuilder.getNotification();
+        ((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).notify(0, notification);
     }
 
     @Override
@@ -96,14 +112,18 @@ public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNav
         return true;
     }
     
-    public boolean onMenuItemSelected(int featureId, android.view.MenuItem item) {
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
     	switch (item.getItemId()) {
 		case R.id.menu_account:
 			// Start account activity
 			break;
 
 		case R.id.menu_settings:
+		{
 			// Start settings activity
+			Intent intent = new Intent(this, MorlunkSettingsActivity.class);
+			startActivity(intent);
+		}
 			break;
 		case R.id.menu_about:
 		{

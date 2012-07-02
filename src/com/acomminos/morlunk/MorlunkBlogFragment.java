@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.Loader;
+import android.support.v4.content.Loader.OnLoadCompleteListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +18,16 @@ import android.widget.TextView;
 
 import com.acomminos.morlunk.http.MorlunkRequest;
 import com.acomminos.morlunk.http.MorlunkRequestTask;
-import com.acomminos.morlunk.http.MorlunkRequestTask.MorlunkRequestListener;
 import com.acomminos.morlunk.http.MorlunkResponse;
 
-public class MorlunkBlogFragment extends ListFragment implements MorlunkRequestListener {
+public class MorlunkBlogFragment extends ListFragment implements OnLoadCompleteListener<MorlunkResponse> {
 	
 	private static final String BLOG_API_URL = "http://www.morlunk.com/blog/json";
-	
-	private MorlunkRequest currentRequest;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {;
 		super.onActivityCreated(savedInstanceState);
-		setRetainInstance(true); // Retain fragment so it doesn't reload on orientation change
+		//setRetainInstance(true); // Retain fragment so it doesn't reload on orientation change
 		loadPosts();
 	}
 	
@@ -43,48 +42,48 @@ public class MorlunkBlogFragment extends ListFragment implements MorlunkRequestL
 	 * Loads initial blog posts.
 	 */
 	public void loadPosts() {
-		this.currentRequest = new MorlunkRequest(BLOG_API_URL);
-		MorlunkRequestTask requestTask = new MorlunkRequestTask(this);
-		requestTask.execute(this.currentRequest);
+		MorlunkRequest request = new MorlunkRequest(BLOG_API_URL);
+		MorlunkRequestTask requestTask = new MorlunkRequestTask(getActivity(), request);
+		requestTask.registerListener(requestTask.getId(), this);
+		requestTask.forceLoad();
 	}
 	
 	@Override
-	public void requestCompleted(MorlunkRequest request,
+	public void onLoadComplete(Loader<MorlunkResponse> loader,
 			MorlunkResponse response) {
-		// Configure list adapter and parse JSON posts
-		List<MorlunkBlogPost> blogPosts = new ArrayList<MorlunkBlogPost>();
-		/*
-		try {
-			// TODO parse JSON in other class
-			JsonArray posts = response.getResponseJSON().("posts");
-			
-			Gson gson = new Gson();
-			
-			gson.fromJson(json, classOfT)
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
-		
-		setListAdapter(new MorlunkBlogArrayAdapter(getActivity(), blogPosts));
-	}
-
-	@Override
-	public void requestFailed(MorlunkRequest request) {
-		AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-		dialog.setTitle("Error");
-		dialog.setMessage("Failed to communicate with Morlunk Co. servers!");
-		dialog.setNeutralButton("Retry", new AlertDialog.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				loadPosts();
+		if(response != null) {
+			// TODO load
+			// Configure list adapter and parse JSON posts
+			List<MorlunkBlogPost> blogPosts = new ArrayList<MorlunkBlogPost>();
+			/*
+			try {
+				// TODO parse JSON in other class
+				JsonArray posts = response.getResponseJSON().("posts");
+				
+				Gson gson = new Gson();
+				
+				gson.fromJson(json, classOfT)
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		});
-		dialog.setNegativeButton("Cancel", null);
-		dialog.create().show();
-		setListAdapter(null);
+			*/
+			
+			setListAdapter(new MorlunkBlogArrayAdapter(getActivity(), blogPosts));
+		} else {
+			AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+			dialog.setTitle("Error");
+			dialog.setMessage("Failed to communicate with Morlunk Co. servers!");
+			dialog.setNeutralButton("Retry", new AlertDialog.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					loadPosts();
+				}
+			});
+			dialog.setNegativeButton("Cancel", null);
+			dialog.create().show();
+		}
 	}
 	
 	class MorlunkBlogArrayAdapter extends ArrayAdapter<MorlunkBlogPost> {

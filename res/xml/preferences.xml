@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="Notifications">
+        <SwitchPreference android:title="Notifications" android:summary="Receive notifications" android:defaultValue="true" android:key="preference_notifications"/>
+        <SwitchPreference android:dependency="preference_notifications" android:key="preference_notifications_minecraft" android:title="Minecraft" android:summary="Receive Minecraft-related notifications"/>
+    </PreferenceCategory>
+    
+
+</PreferenceScreen>

@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.Loader;
+import android.support.v4.content.Loader.OnLoadCompleteListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +13,9 @@ import android.webkit.WebView;
 
 import com.acomminos.morlunk.http.MorlunkRequest;
 import com.acomminos.morlunk.http.MorlunkRequestTask;
-import com.acomminos.morlunk.http.MorlunkRequestTask.MorlunkRequestListener;
 import com.acomminos.morlunk.http.MorlunkResponse;
 
-public class MorlunkPageFragment extends Fragment implements MorlunkRequestListener {
+public class MorlunkPageFragment extends Fragment implements OnLoadCompleteListener<MorlunkResponse> {
 	
 	private static final String PAGE_API_URL = "http://www.morlunk.com/page/";
 	
@@ -62,31 +63,29 @@ public class MorlunkPageFragment extends Fragment implements MorlunkRequestListe
 	 */
 	private void loadPage(String pageName) {
 		MorlunkRequest request = new MorlunkRequest(PAGE_API_URL+pageName+"/json"); // The format is morlunk.com/page/PAGE_NAME/json for API access
-		MorlunkRequestTask task = new MorlunkRequestTask(this);
-		task.execute(request);
-	}
-	
-	@Override
-	public void requestCompleted(MorlunkRequest request,
-			MorlunkResponse response) {
-		// TODO Auto-generated method stub
-		// page = whatever
-		// webview loads page body here
+		MorlunkRequestTask task = new MorlunkRequestTask(getActivity(), request);
+		task.registerListener(getId(), this);
+		task.forceLoad();
 	}
 
 	@Override
-	public void requestFailed(MorlunkRequest request) {
-		AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-		dialog.setTitle("Error");
-		dialog.setMessage("Failed to communicate with Morlunk Co. servers!");
-		dialog.setNeutralButton("Retry", new AlertDialog.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				loadPage(pageName);
-			}
-		});
-		dialog.setNegativeButton("Cancel", null);
-		dialog.create().show();
+	public void onLoadComplete(Loader<MorlunkResponse> loader,
+			MorlunkResponse response) {
+		if(response != null) {
+			// TODO load
+		} else {
+			AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+			dialog.setTitle("Error");
+			dialog.setMessage("Failed to communicate with Morlunk Co. servers!");
+			dialog.setNeutralButton("Retry", new AlertDialog.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					loadPage(pageName);
+				}
+			});
+			dialog.setNegativeButton("Cancel", null);
+			dialog.create().show();
+		}
 	}
 }
