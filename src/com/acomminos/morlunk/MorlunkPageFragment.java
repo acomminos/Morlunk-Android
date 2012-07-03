@@ -4,8 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v4.content.Loader.OnLoadCompleteListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,11 @@ import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.acomminos.morlunk.http.response.MorlunkPage;
 import com.acomminos.morlunk.http.response.MorlunkPageResponse;
 
-public class MorlunkPageFragment extends Fragment implements OnLoadCompleteListener<MorlunkResponse> {
+public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<MorlunkResponse> {
 	
 	private static final String PAGE_API_URL = "http://www.morlunk.com/page/";
+	
+	private static final int PAGE_LOADER_ID = 1;
 	
 	private MorlunkPage page;
 	
@@ -71,15 +74,23 @@ public class MorlunkPageFragment extends Fragment implements OnLoadCompleteListe
 	 * @param pageName
 	 */
 	private void loadPage(String pageName) {
-		MorlunkRequest request = new MorlunkRequest(PAGE_API_URL+pageName+"/json", MorlunkRequestType.REQUEST_GET, MorlunkPageResponse.class); // The format is morlunk.com/page/PAGE_NAME/json for API access
-		MorlunkRequestTask task = new MorlunkRequestTask(getActivity(), request);
-		task.registerListener(getId(), this);
-		task.forceLoad();
+		getActivity().setProgressBarIndeterminateVisibility(true);
+		LoaderManager loaderManager = getLoaderManager();
+		loaderManager.initLoader(PAGE_LOADER_ID, null, this);
+	}
+	
+	@Override
+	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
+		MorlunkRequest request = new MorlunkRequest(PAGE_API_URL+pageName+"/json", MorlunkRequestType.REQUEST_GET, MorlunkPageResponse.class);
+		MorlunkRequestTask loader = new MorlunkRequestTask(getActivity(), request);
+		loader.forceLoad(); // Not sure why this is needed. But it doesn't work without it. TODO fix. -AC
+		return loader;
 	}
 
 	@Override
-	public void onLoadComplete(Loader<MorlunkResponse> loader,
+	public void onLoadFinished(Loader<MorlunkResponse> loader,
 			MorlunkResponse response) {
+		getActivity().setProgressBarIndeterminateVisibility(false);
 		if(response != null &&
 				response.result == MorlunkRequestResult.SUCCESS) {
 			// Get response object
@@ -101,5 +112,11 @@ public class MorlunkPageFragment extends Fragment implements OnLoadCompleteListe
 			dialog.setNegativeButton("Cancel", null);
 			dialog.create().show();
 		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<MorlunkResponse> arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }

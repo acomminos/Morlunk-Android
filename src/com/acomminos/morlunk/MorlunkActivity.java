@@ -1,5 +1,9 @@
 package com.acomminos.morlunk;
 
+import com.acomminos.morlunk.MorlunkBlogFragment.MorlunkBlogFragmentListener;
+import com.acomminos.morlunk.account.MorlunkAccountActivity;
+import com.acomminos.morlunk.http.response.MorlunkBlogPost;
+
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -8,18 +12,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 
-public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNavigationListener {
+public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNavigationListener, MorlunkBlogFragmentListener {
 
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        
         setContentView(R.layout.activity_morlunk);
         
         // Set up the action bar.
@@ -112,7 +122,11 @@ public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNav
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
     	switch (item.getItemId()) {
 		case R.id.menu_account:
+		{
 			// Start account activity
+			Intent intent = new Intent(this, MorlunkAccountActivity.class);
+			startActivity(intent);
+		}
 			break;
 
 		case R.id.menu_settings:
@@ -135,5 +149,20 @@ public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNav
 		break;
 		}
     	return true;
-    };
+    }
+
+	@Override
+	public void onBlogPostSelected(MorlunkBlogPost post) {
+		Bundle arguments = new Bundle();
+		arguments.putParcelable("post", post);
+		MorlunkBlogPostFragment postFragment = new MorlunkBlogPostFragment();
+		postFragment.setArguments(arguments);
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		transaction.replace(R.id.container, postFragment);
+		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+		transaction.addToBackStack(null);
+		transaction.commit();
+	};
 }

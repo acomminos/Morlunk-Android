@@ -5,7 +5,7 @@
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="14" />
+        android:targetSdkVersion="15" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -22,15 +22,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MorlunkSettingsActivity">
+        <activity android:name=".MorlunkSettingsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.acomminos.morlunk.MorlunkActivity" />
         </activity>
-        
+
         <service
             android:name=".MorlunkNotificationService"
-            android:enabled="true"
-            android:exported="true" >
+            android:enabled="true" >
+
+            <!-- android:exported="true" -->
         </service>
+
+        <activity
+            android:name=".account.MorlunkAccountActivity"
+            android:label="@string/title_activity_morlunk_account" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.acomminos.morlunk.MorlunkActivity" />
+        </activity>
     </application>
 
 </manifest>
