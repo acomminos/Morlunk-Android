@@ -60,8 +60,13 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_morlunk_page, container, false);
-		webView = (WebView) view.findViewById(R.id.webview_morlunk_page);
 		return view;
+	}
+	
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		webView = (WebView) view.findViewById(R.id.webview_morlunk_page);
 	}
 	
 	@Override
@@ -96,8 +101,11 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 			// Get response object
 			MorlunkPageResponse pageResponse = (MorlunkPageResponse) response;
 			page = pageResponse.page;
-			
-			webView.loadData(page.pageBody, "text/html", "utf-8");
+
+			// Load holo.light stylesheet as well as html
+			String htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"holo-light.css\" />" + page.pageBody;
+			// lets assume we have /assets/style.css file
+			webView.loadDataWithBaseURL("file:///android_asset/", htmlData, "text/html", "UTF-8", null);
 		} else {
 			AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
 			dialog.setTitle("Error");

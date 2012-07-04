@@ -121,7 +121,8 @@ public class MorlunkAccountActivity extends FragmentActivity implements ActionBa
 				break;
 			case 1:
 			{
-				// TODO
+				// TODO PLACEHOLDER
+				fragment = new Fragment();
 			}
 				break;
 			case 2:
@@ -135,14 +136,14 @@ public class MorlunkAccountActivity extends FragmentActivity implements ActionBa
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0: return getString(R.string.title_minecraft).toUpperCase();
-                case 1: return getString(R.string.title_section2).toUpperCase();
+                case 1: return getString(R.string.title_general).toUpperCase();
                 case 2: return getString(R.string.title_section3).toUpperCase();
             }
             return null;
