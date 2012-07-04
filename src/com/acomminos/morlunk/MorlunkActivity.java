@@ -1,9 +1,5 @@
 package com.acomminos.morlunk;
 
-import com.acomminos.morlunk.MorlunkBlogFragment.MorlunkBlogFragmentListener;
-import com.acomminos.morlunk.account.MorlunkAccountActivity;
-import com.acomminos.morlunk.http.response.MorlunkBlogPost;
-
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -19,6 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+
+import com.acomminos.morlunk.MorlunkBlogFragment.MorlunkBlogFragmentListener;
+import com.acomminos.morlunk.account.MorlunkAccountActivity;
+import com.acomminos.morlunk.http.response.MorlunkBlogPost;
 
 public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNavigationListener, MorlunkBlogFragmentListener {
 
