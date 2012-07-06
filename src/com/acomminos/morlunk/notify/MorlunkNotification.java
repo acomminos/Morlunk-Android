@@ -1,5 +1,7 @@
 package com.acomminos.morlunk.notify;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * A class that represents the server-side Morlunk Co. notifications.
  * The user will receive a notification when an important event happens. e.g.
@@ -18,26 +20,13 @@ public class MorlunkNotification {
 		ACTION_ACCOUNT,
 		ACTION_NONE
 	}
-	private String notificationTitle;
-	private String notificationDescription;
-	private MorlunkNotificationAction notificationAction;
 	
-	public String getNotificationTitle() {
-		return notificationTitle;
-	}
-	public void setNotificationTitle(String notificationTitle) {
-		this.notificationTitle = notificationTitle;
-	}
-	public String getNotificationDescription() {
-		return notificationDescription;
-	}
-	public void setNotificationDescription(String notificationDescription) {
-		this.notificationDescription = notificationDescription;
-	}
-	public MorlunkNotificationAction getNotificationAction() {
-		return notificationAction;
-	}
-	public void setNotificationAction(MorlunkNotificationAction notificationAction) {
-		this.notificationAction = notificationAction;
-	}
+	@SerializedName("title")
+	public String notificationTitle;
+	@SerializedName("description")
+	public String notificationDescription;
+	
+	// TODO actions
+	//@SerializedName("action")
+	//private MorlunkNotificationAction notificationAction;
 }

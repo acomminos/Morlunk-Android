@@ -104,7 +104,6 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 
 			// Load holo.light stylesheet as well as html
 			String htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"holo-light.css\" />" + page.pageBody;
-			// lets assume we have /assets/style.css file
 			webView.loadDataWithBaseURL("file:///android_asset/", htmlData, "text/html", "UTF-8", null);
 		} else {
 			AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());

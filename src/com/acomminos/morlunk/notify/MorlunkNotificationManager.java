@@ -3,18 +3,36 @@ package com.acomminos.morlunk.notify;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 
 public class MorlunkNotificationManager {
 
-	// TODO make this an option in settings
+	private static MorlunkNotificationManager notificationManager;
+	
+	// TODO respect the notification toggle option in settings
 	private static final long notificationPeriod = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-	
-	// TODO check whether or not the user has enabled notifications.
-	
 	private Context context;
+	private PendingIntent notificationPendingIntent;
+	private boolean notificationsOn = false;
 	
-	public MorlunkNotificationManager(Context context) {
+	/**
+	 * Creates a new instance of a notification manager. To be called when the app starts.
+	 */
+	public static MorlunkNotificationManager createInstance(Context context) {
+		notificationManager = new MorlunkNotificationManager(context);
+		return notificationManager;
+	}
+	
+	public static MorlunkNotificationManager getInstance() {
+		return notificationManager;
+	}
+	
+	private MorlunkNotificationManager(Context context) {
 		this.context = context;
+		
+		// Create notification intent
+		Intent notificationIntent = new Intent(context, MorlunkNotificationService.class);
+		notificationPendingIntent = PendingIntent.getService(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 	
 	/**
@@ -22,10 +40,30 @@ public class MorlunkNotificationManager {
 	 * If the user has disabled notifications, don't do anything.
 	 */
 	public void registerNotifications() {
-		PendingIntent intent = PendingIntent.getService(context, 0, null, PendingIntent.FLAG_CANCEL_CURRENT);
-		
-		// Register alarm
-		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, 0, notificationPeriod, intent);
+		if(!notificationsOn) {
+			// Register alarm
+			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+			alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, 0, notificationPeriod, notificationPendingIntent);
+			notificationsOn = true;
+		}
 	}
+	
+	/**
+	 * Un-registers the app from receiving notifications.
+	 */
+	public void deregisterNotifications() {
+		if(notificationsOn) {
+			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+			alarmManager.cancel(notificationPendingIntent);
+			notificationsOn = false;
+		}
+	}
+	
+	/**
+	 * @return the notificationsOn
+	 */
+	public boolean areNotificationsOn() {
+		return notificationsOn;
+	}
+
 }

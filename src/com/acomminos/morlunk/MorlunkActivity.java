@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import com.acomminos.morlunk.MorlunkBlogFragment.MorlunkBlogFragmentListener;
 import com.acomminos.morlunk.account.MorlunkAccountActivity;
 import com.acomminos.morlunk.http.response.MorlunkBlogPost;
+import com.acomminos.morlunk.notify.MorlunkNotificationManager;
 
 public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNavigationListener, MorlunkBlogFragmentListener {
 
@@ -28,6 +29,12 @@ public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNav
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         
         setContentView(R.layout.activity_morlunk);
+        
+        // Setup notification manager
+        if(MorlunkNotificationManager.getInstance() == null) {
+        	MorlunkNotificationManager manager = MorlunkNotificationManager.createInstance(this);
+        	manager.registerNotifications(); // TODO check in settings
+        }
         
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
