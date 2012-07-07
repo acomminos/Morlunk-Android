@@ -1,25 +1,20 @@
 package com.acomminos.morlunk.http;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-
-import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 import android.webkit.CookieSyncManager;
+
+import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class MorlunkRequestTask extends AsyncTaskLoader<MorlunkResponse>{
 	
@@ -32,13 +27,6 @@ public class MorlunkRequestTask extends AsyncTaskLoader<MorlunkResponse>{
 	
 	@Override
 	public MorlunkResponse loadInBackground() {
-		// Instantiate CookieSyncManager if not already
-		CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(getContext());
-		CookieStore cookieStore = new BasicCookieStore();
-		
-		HttpContext context = new BasicHttpContext();
-	    context.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-		
 		HttpClient client = new DefaultHttpClient();
 		HttpUriRequest request = null;
 		try {
@@ -52,8 +40,8 @@ public class MorlunkRequestTask extends AsyncTaskLoader<MorlunkResponse>{
 				break;
 			}
 			ResponseHandler<String> handler = new BasicResponseHandler();
-			HttpResponse response = client.execute(request, context);
-			cookieSyncManager.sync(); // Sync cookies
+			HttpResponse response = client.execute(request);
+			CookieSyncManager.getInstance().sync(); // Sync cookies
 			
 			String jsonResponse = handler.handleResponse(response);
 			

@@ -102,8 +102,10 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 			MorlunkPageResponse pageResponse = (MorlunkPageResponse) response;
 			page = pageResponse.page;
 
-			// Load holo.light stylesheet as well as html
-			String htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"holo-light.css\" />" + page.pageBody;
+			// Load holo.light stylesheet, morlunk stylesheet, as well as html
+			String htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://www.morlunk.com/static/css/stylesheet.css\" />"+
+					"<link rel=\"stylesheet\" type=\"text/css\" href=\"http://www.morlunk.com/static/css/stylesheet_mobile.css\" />"+
+					"<link rel=\"stylesheet\" type=\"text/css\" href=\"holo-light.css\" />" + page.pageBody;
 			webView.loadDataWithBaseURL("file:///android_asset/", htmlData, "text/html", "UTF-8", null);
 		} else {
 			AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());

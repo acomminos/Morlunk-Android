@@ -13,6 +13,7 @@ public class MorlunkResponse {
 	
 	public enum MorlunkRequestResult {
 		NOT_AUTHENTICATED,
+		NO_USER,
 		INVALID_REQUEST,
 		ERROR,
 		UNKNOWN,
@@ -41,6 +42,8 @@ class MorlunkRequestResultDeserializer implements JsonDeserializer<MorlunkReques
 			error = MorlunkRequestResult.INVALID_REQUEST;
 		} else if (resultCode.equals("error")) {
 			error = MorlunkRequestResult.ERROR;
+		} else if (resultCode.equals("no_user")) {
+			error = MorlunkRequestResult.NO_USER;
 		} else if (resultCode.equals("no_auth")) {
 			error = MorlunkRequestResult.NOT_AUTHENTICATED;
 		} else {
