@@ -37,7 +37,8 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 		args.putString("username", username);
 		args.putString("password", password);
 		
-		loaderManager.initLoader(LOGIN_LOADER_ID, args, this);
+		// Restart to get new post data
+		loaderManager.restartLoader(LOGIN_LOADER_ID, args, this);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
@@ -30,9 +31,12 @@ public class MorlunkRequestTask extends AsyncTaskLoader<MorlunkResponse>{
 		
 		if(client == null) {
 			// Make a thread-safe singleton client
+		    DefaultHttpClient client = new DefaultHttpClient();
+		    ClientConnectionManager mgr = client.getConnectionManager();
 			ThreadSafeClientConnManager connectionManager = 
-		      		new ThreadSafeClientConnManager(null, null);
-		    client = new DefaultHttpClient(connectionManager, null);
+		      		new ThreadSafeClientConnManager(client.getParams(), mgr.getSchemeRegistry());
+		    client = new DefaultHttpClient(connectionManager, client.getParams());
+		    // TODO import old cookies from serialized JSON into the client
 		}
 	}
 	
@@ -51,7 +55,7 @@ public class MorlunkRequestTask extends AsyncTaskLoader<MorlunkResponse>{
 			}
 			ResponseHandler<String> handler = new BasicResponseHandler();
 			HttpResponse response = client.execute(request);
-			CookieSyncManager.getInstance().sync(); // Sync cookies
+			CookieSyncManager.getInstance().sync(); // Sync cookies TODO fix, does nothing
 			
 			String jsonResponse = handler.handleResponse(response);
 			

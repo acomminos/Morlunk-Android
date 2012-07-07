@@ -43,7 +43,7 @@ public class MorlunkBlogFragment extends ListFragment implements LoaderCallbacks
 	public void onActivityCreated(Bundle savedInstanceState) {;
 		super.onActivityCreated(savedInstanceState);
 		//setRetainInstance(true); // Retain fragment so it doesn't reload on orientation change
-		loadPosts();
+		loadPosts(false);
 		getListView().setOnItemClickListener(this);
 	}
 	
@@ -61,9 +61,13 @@ public class MorlunkBlogFragment extends ListFragment implements LoaderCallbacks
 	/**
 	 * Loads initial blog posts.
 	 */
-	public void loadPosts() {
+	public void loadPosts(boolean reload) {
 		LoaderManager loaderManager = getLoaderManager();
-		loaderManager.initLoader(BLOG_LOADER_ID, null, this);
+		if(reload) {
+			loaderManager.restartLoader(BLOG_LOADER_ID, null, this);
+		} else {
+			loaderManager.initLoader(BLOG_LOADER_ID, null, this);
+		}
 	}
 
 	@Override
@@ -91,7 +95,7 @@ public class MorlunkBlogFragment extends ListFragment implements LoaderCallbacks
 				
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					loadPosts();
+					loadPosts(true);
 				}
 			});
 			dialog.setNegativeButton("Cancel", null);

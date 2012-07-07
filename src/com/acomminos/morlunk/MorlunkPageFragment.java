@@ -47,7 +47,7 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 		}
 		
 		// Load page data
-		loadPage(pageName);
+		loadPage(pageName, false);
 	}
 	
 	@Override
@@ -78,10 +78,14 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 	 * Loads the MorlunkPage required into the webview. The JSON parsing should go into its own class, TODO.
 	 * @param pageName
 	 */
-	private void loadPage(String pageName) {
+	private void loadPage(String pageName, boolean reload) {
 		getActivity().setProgressBarIndeterminateVisibility(true);
 		LoaderManager loaderManager = getLoaderManager();
-		loaderManager.initLoader(PAGE_LOADER_ID, null, this);
+		if(reload) {
+			loaderManager.restartLoader(PAGE_LOADER_ID, null, this);
+		} else {
+			loaderManager.initLoader(PAGE_LOADER_ID, null, this);
+		}
 	}
 	
 	@Override
@@ -115,7 +119,7 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 				
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					loadPage(pageName);
+					loadPage(pageName, true);
 				}
 			});
 			dialog.setNegativeButton("Cancel", null);
