@@ -50,6 +50,7 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 		loginRequest.addArgument("password", password);
 		
 		MorlunkRequestTask requestTask = new MorlunkRequestTask(context, loginRequest);
+		requestTask.forceLoad();
 		return requestTask;
 	}
 

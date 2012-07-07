@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import com.acomminos.morlunk.R;
 
 public class MorlunkAccountActivity extends FragmentActivity implements ActionBar.TabListener {
-
+	
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
      * sections. We use a {@link android.support.v4.app.FragmentPagerAdapter} derivative, which will
@@ -98,7 +98,7 @@ public class MorlunkAccountActivity extends FragmentActivity implements ActionBa
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
-
+    
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
      * sections of the app.

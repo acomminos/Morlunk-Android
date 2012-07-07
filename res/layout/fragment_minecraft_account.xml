@@ -15,18 +15,24 @@
         android:id="@+id/minecraft_account_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:lines="1"
         android:text="No account linked"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
 
+    <TextView
+        android:id="@+id/minecraft_account_paosos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$XXX Paosos" />
+
     <ListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="1" >
+        android:layout_weight="1" 
+        android:layout_marginTop="10dp">
     </ListView>
 
 </LinearLayout>

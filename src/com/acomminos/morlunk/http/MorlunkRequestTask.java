@@ -3,9 +3,11 @@ package com.acomminos.morlunk.http;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
@@ -18,16 +20,24 @@ import com.google.gson.GsonBuilder;
 
 public class MorlunkRequestTask extends AsyncTaskLoader<MorlunkResponse>{
 	
+	private static volatile HttpClient client = new DefaultHttpClient(); // TODO make cleaner, we need a singleton for cookie saving
+	
 	private MorlunkRequest morlunkRequest;
 	
 	public MorlunkRequestTask(Context context, MorlunkRequest request) {
 		super(context);
 		this.morlunkRequest = request;
+		
+		if(client == null) {
+			// Make a thread-safe singleton client
+			ThreadSafeClientConnManager connectionManager = 
+		      		new ThreadSafeClientConnManager(null, null);
+		    client = new DefaultHttpClient(connectionManager, null);
+		}
 	}
 	
 	@Override
 	public MorlunkResponse loadInBackground() {
-		HttpClient client = new DefaultHttpClient();
 		HttpUriRequest request = null;
 		try {
 			Log.i("HTTP", "Loading URL "+morlunkRequest.getUrl());
@@ -51,11 +61,21 @@ public class MorlunkRequestTask extends AsyncTaskLoader<MorlunkResponse>{
 		    Gson gson = gsonBuilder.create();
 		    
 		    MorlunkResponse morlunkResponse = gson.fromJson(jsonResponse, morlunkRequest.getResponseClass());
+		    
+		    Log.i("HTTP", "Response: "+morlunkResponse.result);
+		    
+		    if(request instanceof HttpPost) {
+		    	// Handle closing POST requests
+		    	((HttpPost)request).getEntity().consumeContent();
+		    }
+		    
 			return morlunkResponse;
 		} catch (Exception e) {
 			// TODO: handle exception and return a generic error.
 			e.printStackTrace();
-			return null;
+			MorlunkResponse response = new MorlunkResponse();
+			response.result = MorlunkRequestResult.UNKNOWN;
+			return response;
 		}
 	}
 }
