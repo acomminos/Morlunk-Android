@@ -8,6 +8,7 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,16 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 			"Redeem Paoso Coupon"
 	};
 	
+	private MorlunkAccountManager accountManager;
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		accountManager = new MorlunkAccountManager(getActivity());
+		accountManager.setAccountListener(MorlunkMinecraftAccountFragment.this);
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,36 +76,6 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 	private void loadMinecraftAccount() {
 		LoaderManager loaderManager = getLoaderManager();
 		loaderManager.initLoader(MINECRAFT_ACCOUNT_LOADER_ID, null, this);
-	}
-	
-	/**
-	 * Show login alert and sets up hooks.
-	 */
-	private void showLoginAlert() {
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-		alertDialog.setTitle("Login to Morlunk Co.");
-		View alertView = getLayoutInflater(null).inflate(R.layout.account_text_alert, null);
-		final EditText usernameField = (EditText) alertView.findViewById(R.id.account_alert_username);
-		final EditText passwordField = (EditText) alertView.findViewById(R.id.account_alert_password);
-		
-		alertDialog.setView(alertView);
-		alertDialog.setPositiveButton("Login", new OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				MorlunkAccountManager accountManager = new MorlunkAccountManager(getActivity());
-				accountManager.setAccountListener(MorlunkMinecraftAccountFragment.this);
-				accountManager.login(usernameField.getText().toString(), passwordField.getText().toString());
-			}
-		});
-		alertDialog.setNegativeButton("Cancel", new OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				getActivity().finish(); // Quit account activity TODO make cleaner
-			}
-		});
-		alertDialog.show();
 	}
 
 	@Override
