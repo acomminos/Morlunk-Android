@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme" 
         android:name="MorlunkApplication">
         <activity
-            android:name=".MorlunkActivity"
+            android:name=".MorlunkHomeActivity"
             android:label="@string/title_activity_morlunk" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

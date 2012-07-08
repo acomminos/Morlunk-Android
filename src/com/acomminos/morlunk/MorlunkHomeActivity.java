@@ -18,7 +18,7 @@ import com.acomminos.morlunk.account.MorlunkAccountActivity;
 import com.acomminos.morlunk.http.response.MorlunkBlogPost;
 import com.acomminos.morlunk.notify.MorlunkNotificationManager;
 
-public class MorlunkActivity extends FragmentActivity implements ActionBar.OnNavigationListener, MorlunkBlogFragmentListener {
+public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.OnNavigationListener, MorlunkBlogFragmentListener {
 
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 

@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.acomminos.morlunk.MorlunkLoadingHandler;
 import com.acomminos.morlunk.R;
 import com.acomminos.morlunk.account.MorlunkAccountManager.MorlunkAccountListener;
 import com.acomminos.morlunk.http.MorlunkRequest;
@@ -119,6 +120,10 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 
 	@Override
 	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
+		// Show loading screen
+		MorlunkLoadingHandler loadingHandler = (MorlunkLoadingHandler) getActivity(); // TODO make cleaner
+		loadingHandler.showLoadingScreen();
+		
 		MorlunkRequest request = new MorlunkRequest(MINECRAFT_ACCOUNT_API_URL, MorlunkRequestType.REQUEST_GET, MorlunkMinecraftAccountResponse.class);
 		MorlunkRequestTask task = new MorlunkRequestTask(getActivity(), request);
 		task.forceLoad(); // TODO fix this
@@ -136,6 +141,10 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 			accountView.setText(accountResponse.account.minecraftUsername);
 			TextView paososView = (TextView) getView().findViewById(R.id.minecraft_account_paosos);
 			paososView.setText("$"+accountResponse.account.paosos+" Paosos");
+			
+			// Hide loading screen
+			MorlunkLoadingHandler loadingHandler = (MorlunkLoadingHandler) getActivity(); // TODO make cleaner
+			loadingHandler.dismissLoadingScreen();
 		} else if(arg1.result == MorlunkRequestResult.NO_USER) {
 			// No minecraft user
 		} else if(arg1.result == MorlunkRequestResult.NOT_AUTHENTICATED) {

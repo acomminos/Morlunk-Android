@@ -11,10 +11,12 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ViewSwitcher;
 
+import com.acomminos.morlunk.MorlunkLoadingHandler;
 import com.acomminos.morlunk.R;
 
-public class MorlunkAccountActivity extends FragmentActivity implements ActionBar.TabListener {
+public class MorlunkAccountActivity extends FragmentActivity implements ActionBar.TabListener, MorlunkLoadingHandler {
 	
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
@@ -29,6 +31,8 @@ public class MorlunkAccountActivity extends FragmentActivity implements ActionBa
      */
     ViewPager mViewPager;
 
+    ViewSwitcher mViewSwitcher;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +70,9 @@ public class MorlunkAccountActivity extends FragmentActivity implements ActionBa
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+        
+        // Load view switcher
+        mViewSwitcher = (ViewSwitcher) findViewById(R.id.account_viewswitcher);
     }
 
     @Override
@@ -149,4 +156,19 @@ public class MorlunkAccountActivity extends FragmentActivity implements ActionBa
             return null;
         }
     }
+
+	@Override
+	public void showLoadingScreen() {
+		mViewSwitcher.showNext();
+	}
+
+	@Override
+	public void dismissLoadingScreen() {
+		mViewSwitcher.showPrevious();
+	}
+
+	@Override
+	public ViewSwitcher getViewSwitcher() {
+		return mViewSwitcher;
+	}
 }
