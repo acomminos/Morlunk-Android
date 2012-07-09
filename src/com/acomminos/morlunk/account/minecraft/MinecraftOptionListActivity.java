@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import com.acomminos.morlunk.R;
+import com.acomminos.morlunk.account.MorlunkAccountManager;
 import com.acomminos.morlunk.dummy.MinecraftContent;
 import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftItem;
 
@@ -51,6 +53,10 @@ public class MinecraftOptionListActivity extends FragmentActivity
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+            case R.id.menu_logout:
+            	MorlunkAccountManager.getInstance().logout();
+            	finish();
+            	return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -81,6 +87,12 @@ public class MinecraftOptionListActivity extends FragmentActivity
             detailIntent.putExtra("item_id", item.id);
             startActivity(detailIntent);
         }
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_morlunk_account, menu);
+        return true;
     }
 
 	@Override

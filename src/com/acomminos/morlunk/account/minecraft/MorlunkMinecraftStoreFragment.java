@@ -25,9 +25,14 @@ import com.acomminos.morlunk.http.MorlunkResponse;
 public class MorlunkMinecraftStoreFragment extends ListFragment implements LoaderCallbacks<MorlunkResponse> {
 	
 	private static final String STORE_BUY_API_URL = "http://www.morlunk.com/minecraft/store/buy/";
-	private static final String ITEM_ID_KEY = "item_";
+	private static final String ITEM_ID_KEY = "item_id";
 	
 	private static final int BUY_REQUEST_LOADER_ID = 0;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 	
 	protected void buyItem(MorlunkMinecraftStoreItem item) {
 		Bundle arguments = new Bundle();

@@ -9,6 +9,8 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.acomminos.morlunk.R;
@@ -25,6 +27,7 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 	
 	private static final String MINECRAFT_ACCOUNT_API_URL = "http://www.morlunk.com/minecraft/account/json";
 	private static final int MINECRAFT_ACCOUNT_LOADER_ID = 235; // RANDINT!
+	private static final int MINECRAFT_STASH_LOADER_ID = 236;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -59,6 +62,11 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 		// Set custom username font for title
 		Typeface mineType = Typeface.createFromAsset(getActivity().getAssets(),"fonts/minecraft_font.ttf"); 
 		((TextView)getView().findViewById(R.id.minecraft_account_text)).setTypeface(mineType);
+		
+		// TODO remove testing code
+		GridView gridView = (GridView) getView().findViewById(R.id.inventory_gridview);
+		gridView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new String[] { "64 Obsidian", "64 Glass", "32 Dirt", "16 Diamond" }));
+	
 	}
 	
 	/**
@@ -73,6 +81,15 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 		}
 	}
 	
+	private void loadMinecraftStash(boolean reload) {
+		LoaderManager loaderManager = getLoaderManager();
+		if(reload) {
+			loaderManager.restartLoader(MINECRAFT_STASH_LOADER_ID, null, this);
+		} else {
+			loaderManager.initLoader(MINECRAFT_STASH_LOADER_ID, null, this);
+		}
+	}
+	
 	@Override
 	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
 		MorlunkRequest request = new MorlunkRequest(MINECRAFT_ACCOUNT_API_URL, MorlunkRequestType.REQUEST_GET, MorlunkMinecraftAccountResponse.class);
@@ -84,20 +101,28 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 	@Override
 	public void onLoadFinished(Loader<MorlunkResponse> arg0,
 			MorlunkResponse arg1) {
-		if(arg1.result == MorlunkRequestResult.SUCCESS) {
-			// Populate fields
-			MorlunkMinecraftAccountResponse accountResponse = (MorlunkMinecraftAccountResponse) arg1;
-			TextView accountView = (TextView) getView().findViewById(R.id.minecraft_account_text);
-			accountView.setText(accountResponse.account.minecraftUsername);
-			TextView paososView = (TextView) getView().findViewById(R.id.minecraft_account_paosos);
-			paososView.setText("$"+accountResponse.account.paosos+" Paosos");
-		} else if(arg1.result == MorlunkRequestResult.NO_USER) {
-			// No minecraft user
-		} else if(arg1.result == MorlunkRequestResult.NOT_AUTHENTICATED) {
-			// Login, the minecraft account will be retrieved after initial auth
-			MorlunkAccountManager.getInstance().login();
-		} else {
-			// Popup with generic error
+		if(arg0.getId() == MINECRAFT_ACCOUNT_LOADER_ID) {
+			if(arg1.result == MorlunkRequestResult.SUCCESS) {
+				// Populate fields
+				MorlunkMinecraftAccountResponse accountResponse = (MorlunkMinecraftAccountResponse) arg1;
+				TextView accountView = (TextView) getView().findViewById(R.id.minecraft_account_text);
+				accountView.setText(accountResponse.account.minecraftUsername);
+				TextView paososView = (TextView) getView().findViewById(R.id.minecraft_account_paosos);
+				paososView.setText("$"+accountResponse.account.paosos+" Paosos");
+			} else if(arg1.result == MorlunkRequestResult.NO_USER) {
+				// No minecraft user
+			} else if(arg1.result == MorlunkRequestResult.NOT_AUTHENTICATED) {
+				// Login, the minecraft account will be retrieved after initial auth
+				MorlunkAccountManager.getInstance().login();
+			} else {
+				// Popup with generic error
+			}
+		} else if(arg0.getId() == MINECRAFT_STASH_LOADER_ID) {
+			if(arg1.result == MorlunkRequestResult.SUCCESS) {
+				// Populate items
+				GridView gridView = (GridView) getView().findViewById(R.id.inventory_gridview);
+				gridView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new String[] { "Item1", "Item2", "Item3" }));
+			}
 		}
 	}
 

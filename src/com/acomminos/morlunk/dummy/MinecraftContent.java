@@ -38,6 +38,7 @@ public class MinecraftContent {
         addItem(new MinecraftItem("1", "Morlunk Co. Store", MorlunkMinecraftStoreFragment.class));
         addItem(new MinecraftItem("2", "Paoso Conversion Rates", null));
         addItem(new MinecraftItem("3", "Redeem Paoso Coupons", null));
+        addItem(new MinecraftItem("4", "Buy Paosos", null));
     }
 
     private static void addItem(MinecraftItem item) {
