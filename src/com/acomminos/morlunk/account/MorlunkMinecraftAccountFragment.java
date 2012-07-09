@@ -1,5 +1,7 @@
 package com.acomminos.morlunk.account;
 
+import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -31,7 +33,8 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 	String[] listItems = {
 			"Morlunk Co. Store",
 			"Paoso Conversion Rates",
-			"Redeem Paoso Coupon"
+			"Redeem Paoso Coupon",
+			"Buy Paosos"
 	};
 	
 	private MorlunkAccountManager accountManager;
@@ -49,7 +52,7 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listItems);
+		MorlunkMinecraftArrayAdapter arrayAdapter = new MorlunkMinecraftArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listItems);
 		setListAdapter(arrayAdapter);
 	}
 	
@@ -64,6 +67,10 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		getListView().setOnItemClickListener(this);
+		
+		// Set custom username font for title
+		Typeface mineType = Typeface.createFromAsset(getActivity().getAssets(),"fonts/minecraft_font.ttf"); 
+		((TextView)getView().findViewById(R.id.minecraft_account_text)).setTypeface(mineType);
 	}
 	
 	/**
@@ -92,6 +99,11 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 		}
 			break;
 		case 2:
+		{
+			
+		}
+			break;
+		case 3:
 		{
 			
 		}
@@ -155,6 +167,27 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 	@Override
 	public void onLoginCancel() {
 		getActivity().finish();
+	}
+	
+	class MorlunkMinecraftArrayAdapter extends ArrayAdapter<String> {
+
+		public MorlunkMinecraftArrayAdapter(Context context,
+				int textViewResourceId, String[] objects) {
+			super(context, textViewResourceId, objects);
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View view = super.getView(position, convertView, parent);
+			
+			// Don't allow buying paosos yet
+			if(position == 3) {
+				view.setEnabled(false);
+			}
+			
+			return view;
+		}
+		
 	}
 
 }

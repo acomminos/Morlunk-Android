@@ -43,7 +43,6 @@ public class MorlunkRequestLoader extends AsyncTaskLoader<MorlunkResponse>{
 			ThreadSafeClientConnManager connectionManager = 
 		      		new ThreadSafeClientConnManager(httpClient.getParams(), mgr.getSchemeRegistry());
 		    client = new DefaultHttpClient(connectionManager, httpClient.getParams());
-		    // TODO import old cookies from serialized JSON into the client
 		}
 	}
 	
