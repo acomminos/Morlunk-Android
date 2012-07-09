@@ -14,7 +14,7 @@ import android.webkit.WebView;
 
 import com.acomminos.morlunk.http.MorlunkRequest;
 import com.acomminos.morlunk.http.MorlunkRequest.MorlunkRequestType;
-import com.acomminos.morlunk.http.MorlunkRequestTask;
+import com.acomminos.morlunk.http.MorlunkRequestLoader;
 import com.acomminos.morlunk.http.MorlunkResponse;
 import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.acomminos.morlunk.http.response.MorlunkPage;
@@ -91,7 +91,7 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 	@Override
 	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
 		MorlunkRequest request = new MorlunkRequest(PAGE_API_URL+pageName+"/json", MorlunkRequestType.REQUEST_GET, MorlunkPageResponse.class);
-		MorlunkRequestTask loader = new MorlunkRequestTask(getActivity(), request);
+		MorlunkRequestLoader loader = new MorlunkRequestLoader(getActivity(), request);
 		loader.forceLoad(); // Not sure why this is needed. But it doesn't work without it. TODO fix. -AC
 		return loader;
 	}

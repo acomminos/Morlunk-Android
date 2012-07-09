@@ -77,6 +77,7 @@ public class MorlunkAccountActivity extends FragmentActivity implements ActionBa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+    	getMenuInflater().inflate(R.menu.activity_morlunk_account, menu);
         return true;
     }
 
@@ -87,6 +88,13 @@ public class MorlunkAccountActivity extends FragmentActivity implements ActionBa
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+            case R.id.menu_logout:
+            {
+            	// TODO make cleaner
+            	new MorlunkAccountManager(this, getSupportLoaderManager()).logout();
+            	finish();
+            }
+            	return true;
         }
         return super.onOptionsItemSelected(item);
     }

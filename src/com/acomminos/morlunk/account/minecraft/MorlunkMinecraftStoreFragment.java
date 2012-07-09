@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.acomminos.morlunk.R;
 import com.acomminos.morlunk.http.MorlunkRequest;
 import com.acomminos.morlunk.http.MorlunkRequest.MorlunkRequestType;
-import com.acomminos.morlunk.http.MorlunkRequestTask;
+import com.acomminos.morlunk.http.MorlunkRequestLoader;
 import com.acomminos.morlunk.http.MorlunkResponse;
 
 public class MorlunkMinecraftStoreFragment extends ListFragment implements LoaderCallbacks<MorlunkResponse> {
@@ -40,7 +40,7 @@ public class MorlunkMinecraftStoreFragment extends ListFragment implements Loade
 	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
 		MorlunkRequest request = new MorlunkRequest(STORE_BUY_API_URL, MorlunkRequestType.REQUEST_GET, MorlunkResponse.class);
 		request.addArgument(ITEM_ID_KEY, String.valueOf(arg1.getInt(ITEM_ID_KEY)));
-		MorlunkRequestTask task = new MorlunkRequestTask(getActivity(), request);
+		MorlunkRequestLoader task = new MorlunkRequestLoader(getActivity(), request);
 		return task;
 	}
 

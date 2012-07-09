@@ -19,13 +19,20 @@ import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class MorlunkRequestTask extends AsyncTaskLoader<MorlunkResponse>{
+public class MorlunkRequestLoader extends AsyncTaskLoader<MorlunkResponse>{
 	
 	private static volatile HttpClient client = new DefaultHttpClient(); // TODO make cleaner, we need a singleton for cookie saving
 	
 	private MorlunkRequest morlunkRequest;
 	
-	public MorlunkRequestTask(Context context, MorlunkRequest request) {
+	/**
+	 * Clears all cookies in the active httpclient.
+	 */
+	public static void clearCookies() {
+		((DefaultHttpClient)client).getCookieStore().clear();
+	}
+	
+	public MorlunkRequestLoader(Context context, MorlunkRequest request) {
 		super(context);
 		this.morlunkRequest = request;
 		

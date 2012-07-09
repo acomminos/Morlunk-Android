@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.acomminos.morlunk.http.MorlunkRequest;
 import com.acomminos.morlunk.http.MorlunkRequest.MorlunkRequestType;
-import com.acomminos.morlunk.http.MorlunkRequestTask;
+import com.acomminos.morlunk.http.MorlunkRequestLoader;
 import com.acomminos.morlunk.http.MorlunkResponse;
 import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.acomminos.morlunk.http.response.MorlunkBlogPost;
@@ -73,7 +73,7 @@ public class MorlunkBlogFragment extends ListFragment implements LoaderCallbacks
 	@Override
 	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
 		MorlunkRequest request = new MorlunkRequest(BLOG_API_URL, MorlunkRequestType.REQUEST_GET, MorlunkBlogResponse.class);
-		MorlunkRequestTask requestTask = new MorlunkRequestTask(getActivity(), request);
+		MorlunkRequestLoader requestTask = new MorlunkRequestLoader(getActivity(), request);
 		requestTask.forceLoad(); // Not sure why this is needed. But it doesn't work without it. TODO fix. -AC
 		return requestTask;
 	}
