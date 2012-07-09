@@ -31,4 +31,10 @@
         android:ems="10"
         android:inputType="textPassword" />
 
+    <CheckBox
+        android:id="@+id/account_remember_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remember me" />
+
 </LinearLayout>

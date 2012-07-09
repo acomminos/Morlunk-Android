@@ -26,21 +26,23 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 	private static final String MINECRAFT_ACCOUNT_API_URL = "http://www.morlunk.com/minecraft/account/json";
 	private static final int MINECRAFT_ACCOUNT_LOADER_ID = 235; // RANDINT!
 	
-	private MorlunkAccountManager accountManager;
-	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-		accountManager = new MorlunkAccountManager(getActivity(), getLoaderManager());
-		accountManager.setAccountListener(MorlunkMinecraftAccountFragment.this);
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
+		MorlunkAccountManager.getInstance().registerAccountListener(this);
 		loadMinecraftAccount(false);
+	}
+	
+	@Override
+	public void onDestroy() {
+		MorlunkAccountManager.getInstance().unregisterAccountListener(this);
+		super.onDestroy();
 	}
 	
 	@Override
@@ -93,7 +95,7 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 			// No minecraft user
 		} else if(arg1.result == MorlunkRequestResult.NOT_AUTHENTICATED) {
 			// Login, the minecraft account will be retrieved after initial auth
-			accountManager.login();
+			MorlunkAccountManager.getInstance().login();
 		} else {
 			// Popup with generic error
 		}

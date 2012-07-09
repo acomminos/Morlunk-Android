@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 
 import com.acomminos.morlunk.MorlunkBlogFragment.MorlunkBlogFragmentListener;
+import com.acomminos.morlunk.account.MorlunkAccountManager;
 import com.acomminos.morlunk.account.minecraft.MinecraftOptionListActivity;
 import com.acomminos.morlunk.http.response.MorlunkBlogPost;
 import com.acomminos.morlunk.notify.MorlunkNotificationManager;
@@ -35,6 +36,11 @@ public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.O
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         
         setContentView(R.layout.activity_morlunk);
+        
+        // Create account manager
+        if(MorlunkAccountManager.getInstance() == null) {
+        	MorlunkAccountManager.createInstance(this, getSupportLoaderManager());
+        }
         
         // Setup notification manager
         if(MorlunkNotificationManager.getInstance() == null) {

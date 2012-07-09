@@ -1,5 +1,8 @@
 package com.acomminos.morlunk.account;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,6 +17,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.acomminos.morlunk.R;
@@ -49,9 +53,31 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 	private SharedPreferences loginPreferences;
 	private ProgressDialog progressDialog;
 	
-	private MorlunkAccountListener accountListener;
+	private List<MorlunkAccountListener> accountListeners = new ArrayList<MorlunkAccountListener>();
 	
-	public MorlunkAccountManager(Context context, LoaderManager loaderManager) {
+	private static MorlunkAccountManager accountManager;
+	
+	/**
+	 * Creates a new singleton instance of the account manager.
+	 * Needs to be called once before getInstance can be used.
+	 * @param context
+	 * @param loaderManager
+	 * @return
+	 */
+	public static MorlunkAccountManager createInstance(Context context, LoaderManager loaderManager) {
+		accountManager = new MorlunkAccountManager(context, loaderManager);
+		return accountManager;
+	}
+	
+	/**
+	 * Retrieves the singleton instance of MorlunkAccountManager. Returns null if createInstance was not called.
+	 * @return
+	 */
+	public static MorlunkAccountManager getInstance() {
+		return accountManager;
+	}
+	
+	private MorlunkAccountManager(Context context, LoaderManager loaderManager) {
 		this.context = context;
 		this.loaderManager = loaderManager;
 		this.loginPreferences = context.getSharedPreferences(LOGIN_PREFERENCES_FILE, 0);
@@ -69,7 +95,7 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 	public void login() {
 		String username = loginPreferences.getString(LOGIN_USERNAME_KEY, "");
 		String password = loginPreferences.getString(LOGIN_PASSWORD_KEY, "");
-		login(username, password);
+		login(username, password, false);
 	}
 	
 	/**
@@ -88,16 +114,19 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 	/**
 	 * This login method is only called when the stored username and password are confirmed to be invalid,
 	 * hence why it is private. To require a login event, @see login().
-	 * The credentials passed will also be stored in XML.
+	 * The credentials passed will also be stored in XML if remember is true.
 	 * @param username
 	 * @param password
+	 * @param remember
 	 */
-	private void login(String username, String password) {
-		storeCredentials(username, password); // TODO make credentials only stored on a success.
+	private void login(String username, String password, boolean remember) {
+		if(remember) {
+			storeCredentials(username, password);
+		}
 		
 		Bundle args = new Bundle();
-		args.putString("username", username);
-		args.putString("password", password);
+		args.putString(LOGIN_USERNAME_KEY, username);
+		args.putString(LOGIN_PASSWORD_KEY, password);
 		
 		// Restart to get new post data
 		loaderManager.restartLoader(LOGIN_LOADER_ID, args, this);
@@ -124,13 +153,14 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 		View alertView = ((LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.account_text_alert, null);
 		final EditText usernameField = (EditText) alertView.findViewById(R.id.account_alert_username);
 		final EditText passwordField = (EditText) alertView.findViewById(R.id.account_alert_password);
+		final CheckBox rememberBox = (CheckBox) alertView.findViewById(R.id.account_remember_checkbox);
 		
 		alertDialog.setView(alertView);
 		alertDialog.setPositiveButton("Login", new OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				login(usernameField.getText().toString(), passwordField.getText().toString());
+				login(usernameField.getText().toString(), passwordField.getText().toString(), rememberBox.isChecked());
 				dialog.dismiss();
 			}
 		});
@@ -139,7 +169,9 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 			@Override
 			public void onCancel(DialogInterface arg0) {
 				// Tell listener to cancel
-				accountListener.onLoginCancel();
+				for (MorlunkAccountListener listener : accountListeners) {
+					listener.onLoginCancel();
+				}
 				
 			}
 		});
@@ -168,14 +200,15 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 			MorlunkResponse arg1) {
 		// Close loading dialog
 		this.progressDialog.dismiss();
-		
-		if(accountListener != null) {
-			if(arg1.result == MorlunkRequestResult.SUCCESS) {
-				// TODO store credentials here
-				accountListener.onLoginSuccess(arg1);
-			} else {
-				showLoginAlert();
-				accountListener.onLoginFailure(arg1);
+
+		if (arg1.result == MorlunkRequestResult.SUCCESS) {
+			for (MorlunkAccountListener listener : accountListeners) {
+				listener.onLoginSuccess(arg1);
+			}
+		} else {
+			showLoginAlert();
+			for (MorlunkAccountListener listener : accountListeners) {
+				listener.onLoginFailure(arg1);
 			}
 		}
 	}
@@ -186,17 +219,15 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 		
 	}
 
-	/**
-	 * @return the accountListener
-	 */
-	public MorlunkAccountListener getAccountListener() {
-		return accountListener;
+	public void registerAccountListener(MorlunkAccountListener listener) {
+		if(!accountListeners.contains(listener)) {
+			accountListeners.add(listener);
+		}
 	}
-
-	/**
-	 * @param accountListener the accountListener to set
-	 */
-	public void setAccountListener(MorlunkAccountListener accountListener) {
-		this.accountListener = accountListener;
+	
+	public void unregisterAccountListener(MorlunkAccountListener listener) {
+		if(accountListeners.contains(listener)) {
+			accountListeners.remove(listener);
+		}
 	}
 }
