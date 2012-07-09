@@ -27,6 +27,12 @@ import com.acomminos.morlunk.http.response.MorlunkMinecraftAccountResponse;
 
 public class MorlunkMinecraftAccountFragment extends ListFragment implements OnItemClickListener, LoaderCallbacks<MorlunkResponse>, MorlunkAccountListener {
 	
+	interface MorlunkMinecraftAccountListener {
+		public void loadMinecraftStore();
+		public void loadMinecraftRates();
+		public void loadMinecraftCouponRedemption();
+	}
+	
 	private static final String MINECRAFT_ACCOUNT_API_URL = "http://www.morlunk.com/minecraft/account/json";
 	private static final int MINECRAFT_ACCOUNT_LOADER_ID = 235; // RANDINT!
 	
@@ -38,6 +44,7 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 	};
 	
 	private MorlunkAccountManager accountManager;
+	private MorlunkMinecraftAccountListener mAccountListener;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -45,8 +52,6 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 		
 		accountManager = new MorlunkAccountManager(getActivity(), getLoaderManager());
 		accountManager.setAccountListener(MorlunkMinecraftAccountFragment.this);
-		
-		loadMinecraftAccount(false);
 	}
 	
 	@Override
@@ -54,6 +59,8 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 		super.onCreate(savedInstanceState);
 		MorlunkMinecraftArrayAdapter arrayAdapter = new MorlunkMinecraftArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listItems);
 		setListAdapter(arrayAdapter);
+		
+		loadMinecraftAccount(false);
 	}
 	
 	@Override
@@ -90,17 +97,17 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 		switch (position) {
 		case 0:
 		{
-			
+			mAccountListener.loadMinecraftStore();
 		}
 			break;
 		case 1:
 		{
-			
+			mAccountListener.loadMinecraftRates();
 		}
 			break;
 		case 2:
 		{
-			
+			mAccountListener.loadMinecraftCouponRedemption();
 		}
 			break;
 		case 3:
@@ -169,6 +176,14 @@ public class MorlunkMinecraftAccountFragment extends ListFragment implements OnI
 		getActivity().finish();
 	}
 	
+	public MorlunkMinecraftAccountListener getAccountListener() {
+		return mAccountListener;
+	}
+
+	public void setAccountListener(MorlunkMinecraftAccountListener mAccountListener) {
+		this.mAccountListener = mAccountListener;
+	}
+
 	class MorlunkMinecraftArrayAdapter extends ArrayAdapter<String> {
 
 		public MorlunkMinecraftArrayAdapter(Context context,

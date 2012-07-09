@@ -15,8 +15,9 @@ import android.widget.ViewSwitcher;
 
 import com.acomminos.morlunk.MorlunkLoadingHandler;
 import com.acomminos.morlunk.R;
+import com.acomminos.morlunk.account.MorlunkMinecraftAccountFragment.MorlunkMinecraftAccountListener;
 
-public class MorlunkAccountActivity extends FragmentActivity implements ActionBar.TabListener, MorlunkLoadingHandler {
+public class MorlunkAccountActivity extends FragmentActivity implements ActionBar.TabListener, MorlunkMinecraftAccountListener, MorlunkLoadingHandler {
 	
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
@@ -132,6 +133,7 @@ public class MorlunkAccountActivity extends FragmentActivity implements ActionBa
 			{
 				// Minecraft account
 				fragment = new MorlunkMinecraftAccountFragment();
+				((MorlunkMinecraftAccountFragment)fragment).setAccountListener(MorlunkAccountActivity.this);
 			}
 				break;
 			case 1:
@@ -179,5 +181,25 @@ public class MorlunkAccountActivity extends FragmentActivity implements ActionBa
 	@Override
 	public ViewSwitcher getViewSwitcher() {
 		return mViewSwitcher;
+	}
+	
+	// Minecraft listener
+
+	@Override
+	public void loadMinecraftStore() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void loadMinecraftRates() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void loadMinecraftCouponRedemption() {
+		// TODO Auto-generated method stub
+		
 	}
 }

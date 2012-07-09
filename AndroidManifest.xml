@@ -10,10 +10,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name="MorlunkApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" 
-        android:name="MorlunkApplication">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".MorlunkHomeActivity"
             android:label="@string/title_activity_morlunk" >
@@ -42,6 +42,20 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.acomminos.morlunk.MorlunkActivity" />
+        </activity>
+        <activity
+            android:name=".account.minecraft.MinecraftOptionListActivity"
+            android:label="@string/title_minecraftoption_list" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.acomminos.morlunk.account.MorlunkAccountActivity" />
+        </activity>
+        <activity
+            android:name=".account.minecraft.MinecraftOptionDetailActivity"
+            android:label="@string/title_minecraftoption_detail" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MinecraftOptionListActivity" />
         </activity>
     </application>
 

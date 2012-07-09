@@ -1,0 +1,3 @@
+<resources>
+    <item type="layout" name="activity_minecraftoption_list">@layout/activity_minecraftoption_twopane</item>
+</resources>

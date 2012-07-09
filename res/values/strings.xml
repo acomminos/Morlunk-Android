@@ -13,5 +13,7 @@
     <string name="title_activity_morlunk_account">Account</string>
     <string name="title_activity_morlunk_blog_post">Morlunk Co. Blog</string>
     <string name="title_activity_morlunk_minecraft_account">MorlunkMinecraftAccountActivity</string>
+    <string name="title_minecraftoption_detail">MinecraftOption Detail</string>
+    <string name="title_minecraftoption_list">MinecraftOptions</string>
 
 </resources>
