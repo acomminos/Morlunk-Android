@@ -21,7 +21,7 @@ import com.google.gson.GsonBuilder;
 
 public class MorlunkRequestLoader extends AsyncTaskLoader<MorlunkResponse>{
 	
-	private static volatile HttpClient client = new DefaultHttpClient(); // TODO make cleaner, we need a singleton for cookie saving
+	private static HttpClient client; // TODO make cleaner, we need a singleton for cookie saving
 	
 	private MorlunkRequest morlunkRequest;
 	
@@ -38,11 +38,11 @@ public class MorlunkRequestLoader extends AsyncTaskLoader<MorlunkResponse>{
 		
 		if(client == null) {
 			// Make a thread-safe singleton client
-		    DefaultHttpClient client = new DefaultHttpClient();
-		    ClientConnectionManager mgr = client.getConnectionManager();
+		    DefaultHttpClient httpClient = new DefaultHttpClient();
+		    ClientConnectionManager mgr = httpClient.getConnectionManager();
 			ThreadSafeClientConnManager connectionManager = 
-		      		new ThreadSafeClientConnManager(client.getParams(), mgr.getSchemeRegistry());
-		    client = new DefaultHttpClient(connectionManager, client.getParams());
+		      		new ThreadSafeClientConnManager(httpClient.getParams(), mgr.getSchemeRegistry());
+		    client = new DefaultHttpClient(connectionManager, httpClient.getParams());
 		    // TODO import old cookies from serialized JSON into the client
 		}
 	}
