@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.acomminos.morlunk.dummy.DummyContent;
-import com.acomminos.morlunk.dummy.DummyContent.DummyItem;
+import com.acomminos.morlunk.dummy.MinecraftContent;
+import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftItem;
 
 public class MinecraftOptionListFragment extends ListFragment {
 
@@ -35,15 +35,15 @@ public class MinecraftOptionListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
+        setListAdapter(new ArrayAdapter<MinecraftContent.MinecraftItem>(getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                DummyContent.ITEMS) {
+                MinecraftContent.ITEMS) {
         	@Override
         	public View getView(int position, View convertView,
         			ViewGroup parent) {
         		View view = super.getView(position, convertView, parent);
-        		DummyItem item = getItem(position);
+        		MinecraftItem item = getItem(position);
         		
         		if(item.fragmentClass == null) {
         			view.setEnabled(false); // Disable items without a fragment
@@ -54,7 +54,7 @@ public class MinecraftOptionListFragment extends ListFragment {
         	
         	@Override
         	public boolean isEnabled(int position) {
-        		DummyItem item = getItem(position);
+        		MinecraftItem item = getItem(position);
         		
         		return item.fragmentClass != null;
    			}
@@ -89,7 +89,7 @@ public class MinecraftOptionListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
-        mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+        mCallbacks.onItemSelected(MinecraftContent.ITEMS.get(position).id);
     }
 
     @Override

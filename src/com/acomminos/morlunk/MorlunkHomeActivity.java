@@ -22,6 +22,12 @@ public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.O
 
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
+    interface Refreshable {
+    	public void refresh();
+    }
+    
+    Fragment mFragment;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +125,7 @@ public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.O
         	break;
     	}
     	}
+    	mFragment = replacementFragment;
     	// Replace fragment
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.container, replacementFragment).commit();
@@ -127,6 +134,13 @@ public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.O
     
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
     	switch (item.getItemId()) {
+    	case R.id.menu_refresh:
+    	{
+    		if(mFragment instanceof Refreshable) {
+    			((Refreshable)mFragment).refresh();
+    		}
+    	}
+    		break;
 		case R.id.menu_account:
 		{
 			// Start account activity

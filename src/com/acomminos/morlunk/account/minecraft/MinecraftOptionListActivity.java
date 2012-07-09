@@ -11,8 +11,8 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import com.acomminos.morlunk.R;
-import com.acomminos.morlunk.dummy.DummyContent;
-import com.acomminos.morlunk.dummy.DummyContent.DummyItem;
+import com.acomminos.morlunk.dummy.MinecraftContent;
+import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftItem;
 
 public class MinecraftOptionListActivity extends FragmentActivity
         implements MinecraftOptionListFragment.Callbacks, OnNavigationListener {
@@ -57,7 +57,7 @@ public class MinecraftOptionListActivity extends FragmentActivity
     @Override
     public void onItemSelected(String id) {
     	
-    	DummyItem item = DummyContent.ITEM_MAP.get(id);
+    	MinecraftItem item = MinecraftContent.ITEM_MAP.get(id);
     	
         if (mTwoPane) {
             Fragment fragment = null;

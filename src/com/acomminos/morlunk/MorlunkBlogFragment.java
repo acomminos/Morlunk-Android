@@ -19,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.acomminos.morlunk.MorlunkHomeActivity.Refreshable;
 import com.acomminos.morlunk.http.MorlunkRequest;
 import com.acomminos.morlunk.http.MorlunkRequest.MorlunkRequestType;
 import com.acomminos.morlunk.http.MorlunkRequestLoader;
@@ -27,7 +28,7 @@ import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.acomminos.morlunk.http.response.MorlunkBlogPost;
 import com.acomminos.morlunk.http.response.MorlunkBlogResponse;
 
-public class MorlunkBlogFragment extends ListFragment implements LoaderCallbacks<MorlunkResponse>, OnItemClickListener {
+public class MorlunkBlogFragment extends ListFragment implements LoaderCallbacks<MorlunkResponse>, OnItemClickListener, Refreshable {
 	
 	interface MorlunkBlogFragmentListener {
 		public void onBlogPostSelected(MorlunkBlogPost post);
@@ -140,5 +141,10 @@ public class MorlunkBlogFragment extends ListFragment implements LoaderCallbacks
 			return itemView;
 		}
 		
+	}
+
+	@Override
+	public void refresh() {
+		loadPosts(true);
 	}
 }

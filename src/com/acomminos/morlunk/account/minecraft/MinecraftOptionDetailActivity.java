@@ -8,12 +8,12 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import com.acomminos.morlunk.R;
-import com.acomminos.morlunk.dummy.DummyContent;
-import com.acomminos.morlunk.dummy.DummyContent.DummyItem;
+import com.acomminos.morlunk.dummy.MinecraftContent;
+import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftItem;
 
 public class MinecraftOptionDetailActivity extends FragmentActivity {
 
-    private DummyItem mItem;
+    private MinecraftItem mItem;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class MinecraftOptionDetailActivity extends FragmentActivity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			mItem = DummyContent.ITEM_MAP.get(getIntent().getExtras().getString("item_id"));
+			mItem = MinecraftContent.ITEM_MAP.get(getIntent().getExtras().getString("item_id"));
 			setTitle(mItem.content);
 			
             getSupportFragmentManager().beginTransaction()

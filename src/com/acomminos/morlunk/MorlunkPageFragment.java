@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
+import com.acomminos.morlunk.MorlunkHomeActivity.Refreshable;
 import com.acomminos.morlunk.http.MorlunkRequest;
 import com.acomminos.morlunk.http.MorlunkRequest.MorlunkRequestType;
 import com.acomminos.morlunk.http.MorlunkRequestLoader;
@@ -20,7 +21,7 @@ import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.acomminos.morlunk.http.response.MorlunkPage;
 import com.acomminos.morlunk.http.response.MorlunkPageResponse;
 
-public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<MorlunkResponse> {
+public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<MorlunkResponse>, Refreshable {
 	
 	private static final String PAGE_API_URL = "http://www.morlunk.com/page/";
 	
@@ -131,5 +132,10 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 	public void onLoaderReset(Loader<MorlunkResponse> arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void refresh() {
+		loadPage(pageName, true);
 	}
 }
