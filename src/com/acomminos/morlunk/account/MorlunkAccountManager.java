@@ -31,7 +31,7 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 	 * @author andrew
 	 *
 	 */
-	interface MorlunkAccountListener {
+	public interface MorlunkAccountListener {
 		public void onLoginSuccess(MorlunkResponse response);
 		public void onLoginFailure(MorlunkResponse response);
 		public void onLoginCancel();

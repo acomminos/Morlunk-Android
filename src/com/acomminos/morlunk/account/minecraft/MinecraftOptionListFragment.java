@@ -1,14 +1,15 @@
 package com.acomminos.morlunk.account.minecraft;
 
-import com.acomminos.morlunk.dummy.DummyContent;
-
-import android.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.acomminos.morlunk.dummy.DummyContent;
+import com.acomminos.morlunk.dummy.DummyContent.DummyItem;
 
 public class MinecraftOptionListFragment extends ListFragment {
 
@@ -35,9 +36,29 @@ public class MinecraftOptionListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                R.layout.simple_list_item_activated_1,
-                R.id.text1,
-                DummyContent.ITEMS));
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1,
+                DummyContent.ITEMS) {
+        	@Override
+        	public View getView(int position, View convertView,
+        			ViewGroup parent) {
+        		View view = super.getView(position, convertView, parent);
+        		DummyItem item = getItem(position);
+        		
+        		if(item.fragmentClass == null) {
+        			view.setEnabled(false); // Disable items without a fragment
+        		}
+        		
+        		return view;
+        	}
+        	
+        	@Override
+        	public boolean isEnabled(int position) {
+        		DummyItem item = getItem(position);
+        		
+        		return item.fragmentClass != null;
+   			}
+        });
     }
 
     @Override

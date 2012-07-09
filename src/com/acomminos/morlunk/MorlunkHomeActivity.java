@@ -14,7 +14,7 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 
 import com.acomminos.morlunk.MorlunkBlogFragment.MorlunkBlogFragmentListener;
-import com.acomminos.morlunk.account.MorlunkAccountActivity;
+import com.acomminos.morlunk.account.minecraft.MinecraftOptionListActivity;
 import com.acomminos.morlunk.http.response.MorlunkBlogPost;
 import com.acomminos.morlunk.notify.MorlunkNotificationManager;
 
@@ -130,7 +130,7 @@ public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.O
 		case R.id.menu_account:
 		{
 			// Start account activity
-			Intent intent = new Intent(this, MorlunkAccountActivity.class);
+			Intent intent = new Intent(this, MinecraftOptionListActivity.class);
 			startActivity(intent);
 		}
 			break;
