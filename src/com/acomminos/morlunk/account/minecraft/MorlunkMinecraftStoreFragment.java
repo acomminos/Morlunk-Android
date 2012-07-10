@@ -98,8 +98,10 @@ public class MorlunkMinecraftStoreFragment extends ListFragment implements Loade
 				MorlunkAccountManager.getInstance().login(this, getActivity(), getLoaderManager());
 			} else if(arg1.result == MorlunkRequestResult.INSUFFICIENT_FUNDS) {
 				Toast.makeText(getActivity(), "You don't have enough Paosos!", Toast.LENGTH_SHORT).show();
-			} else {
-				Toast.makeText(getActivity(), "An unknown error has occurred!", Toast.LENGTH_SHORT).show();
+			} else if(arg1.result == MorlunkRequestResult.NO_MINECRAFT_ACCOUNT) {
+				// Boot them out if they don't have a minecraft account
+				Toast.makeText(getActivity(), "You need to link a Minecraft account at Morlunk.com to use Minecraft services.", Toast.LENGTH_SHORT).show();
+				getActivity().finish();
 			}
 		}
 	}

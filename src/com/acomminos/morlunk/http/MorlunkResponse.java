@@ -13,6 +13,7 @@ public class MorlunkResponse {
 	
 	public enum MorlunkRequestResult {
 		NOT_AUTHENTICATED,
+		NO_MINECRAFT_ACCOUNT,
 		NO_USER,
 		INVALID_REQUEST,
 		INSUFFICIENT_FUNDS,
@@ -43,6 +44,8 @@ class MorlunkRequestResultDeserializer implements JsonDeserializer<MorlunkReques
 			error = MorlunkRequestResult.INVALID_REQUEST;
 		} else if (resultCode.equals("error")) {
 			error = MorlunkRequestResult.ERROR;
+		} else if(resultCode.equals("no_minecraft_account")) {
+			error = MorlunkRequestResult.NO_MINECRAFT_ACCOUNT;
 		} else if (resultCode.equals("no_user")) {
 			error = MorlunkRequestResult.NO_USER;
 		} else if (resultCode.equals("no_auth")) {

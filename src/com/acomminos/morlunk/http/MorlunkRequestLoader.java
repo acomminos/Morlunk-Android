@@ -13,6 +13,7 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.google.gson.Gson;
@@ -91,5 +92,17 @@ public class MorlunkRequestLoader extends AsyncTaskLoader<MorlunkResponse>{
 			response.result = MorlunkRequestResult.UNKNOWN;
 			return response;
 		}
+	}
+	
+	@Override
+	public void deliverResult(MorlunkResponse data) {
+		// Add some generic response handling code
+		if(data.result == MorlunkRequestResult.INVALID_REQUEST || data.result == MorlunkRequestResult.ERROR || data.result == MorlunkRequestResult.UNKNOWN) {
+			// Popup with generic error
+			Toast.makeText(getContext(), "An unknown error occurred!", Toast.LENGTH_SHORT).show();
+			
+		}
+		
+		super.deliverResult(data);
 	}
 }

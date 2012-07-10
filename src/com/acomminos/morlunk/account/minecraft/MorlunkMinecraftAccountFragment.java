@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.acomminos.morlunk.R;
 import com.acomminos.morlunk.account.MorlunkAccountManager;
@@ -122,8 +123,6 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 			} else if(arg1.result == MorlunkRequestResult.NOT_AUTHENTICATED) {
 				// Login, the minecraft account will be retrieved after initial auth
 				MorlunkAccountManager.getInstance().login(this, getActivity(), getLoaderManager());
-			} else {
-				// Popup with generic error
 			}
 		} else if(arg0.getId() == MINECRAFT_STASH_LOADER_ID) {
 			if(arg1.result == MorlunkRequestResult.SUCCESS) {
@@ -132,6 +131,12 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 				GridView gridView = (GridView) getView().findViewById(R.id.inventory_gridview);
 				gridView.setAdapter(new MorlunkMinecraftStashAdapter(getActivity(), stashResponse.stash.items));
 			}
+		}
+		
+		if(arg1.result == MorlunkRequestResult.NO_MINECRAFT_ACCOUNT) {
+			// Boot them out if they don't have a minecraft account
+			Toast.makeText(getActivity(), "You need to link a Minecraft account at Morlunk.com to use Minecraft services.", Toast.LENGTH_SHORT).show();
+			getActivity().finish();
 		}
 	}
 
