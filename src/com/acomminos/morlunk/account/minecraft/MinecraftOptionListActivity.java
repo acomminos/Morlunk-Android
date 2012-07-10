@@ -14,7 +14,7 @@ import android.widget.ArrayAdapter;
 import com.acomminos.morlunk.R;
 import com.acomminos.morlunk.account.MorlunkAccountManager;
 import com.acomminos.morlunk.dummy.MinecraftContent;
-import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftItem;
+import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftOption;
 
 public class MinecraftOptionListActivity extends FragmentActivity
         implements MinecraftOptionListFragment.Callbacks, OnNavigationListener {
@@ -64,7 +64,7 @@ public class MinecraftOptionListActivity extends FragmentActivity
     @Override
     public void onItemSelected(String id) {
     	
-    	MinecraftItem item = MinecraftContent.ITEM_MAP.get(id);
+    	MinecraftOption item = MinecraftContent.ITEM_MAP.get(id);
     	
         if (mTwoPane) {
             Fragment fragment = null;
@@ -77,6 +77,7 @@ public class MinecraftOptionListActivity extends FragmentActivity
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			fragment.setArguments(item.arguments);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.minecraftoption_detail_container, fragment)
                     .commit();
@@ -84,6 +85,7 @@ public class MinecraftOptionListActivity extends FragmentActivity
         } else {
             Intent detailIntent = new Intent(this, MinecraftOptionDetailActivity.class);
             detailIntent.putExtra("fragment_class", item.fragmentClass);
+            detailIntent.putExtra("arguments", item.arguments);
             detailIntent.putExtra("item_id", item.id);
             startActivity(detailIntent);
         }

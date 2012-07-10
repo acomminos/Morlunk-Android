@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.acomminos.morlunk.dummy.MinecraftContent;
-import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftItem;
+import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftOption;
 
 public class MinecraftOptionListFragment extends ListFragment {
 
@@ -35,7 +35,7 @@ public class MinecraftOptionListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setListAdapter(new ArrayAdapter<MinecraftContent.MinecraftItem>(getActivity(),
+        setListAdapter(new ArrayAdapter<MinecraftContent.MinecraftOption>(getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 MinecraftContent.ITEMS) {
@@ -43,7 +43,7 @@ public class MinecraftOptionListFragment extends ListFragment {
         	public View getView(int position, View convertView,
         			ViewGroup parent) {
         		View view = super.getView(position, convertView, parent);
-        		MinecraftItem item = getItem(position);
+        		MinecraftOption item = getItem(position);
         		
         		if(item.fragmentClass == null) {
         			view.setEnabled(false); // Disable items without a fragment
@@ -54,7 +54,7 @@ public class MinecraftOptionListFragment extends ListFragment {
         	
         	@Override
         	public boolean isEnabled(int position) {
-        		MinecraftItem item = getItem(position);
+        		MinecraftOption item = getItem(position);
         		
         		return item.fragmentClass != null;
    			}

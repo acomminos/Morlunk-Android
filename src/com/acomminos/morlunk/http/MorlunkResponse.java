@@ -15,9 +15,10 @@ public class MorlunkResponse {
 		NOT_AUTHENTICATED,
 		NO_USER,
 		INVALID_REQUEST,
+		INSUFFICIENT_FUNDS,
 		ERROR,
 		UNKNOWN,
-		SUCCESS
+		SUCCESS,
 	}
 	
 	@SerializedName("result")
@@ -46,6 +47,8 @@ class MorlunkRequestResultDeserializer implements JsonDeserializer<MorlunkReques
 			error = MorlunkRequestResult.NO_USER;
 		} else if (resultCode.equals("no_auth")) {
 			error = MorlunkRequestResult.NOT_AUTHENTICATED;
+		} else if(resultCode.equals("insufficient_funds")) {
+			error = MorlunkRequestResult.INSUFFICIENT_FUNDS;
 		} else {
 			error = MorlunkRequestResult.UNKNOWN;
 		}

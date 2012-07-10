@@ -9,11 +9,11 @@ import android.view.MenuItem;
 
 import com.acomminos.morlunk.R;
 import com.acomminos.morlunk.dummy.MinecraftContent;
-import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftItem;
+import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftOption;
 
 public class MinecraftOptionDetailActivity extends FragmentActivity {
 
-    private MinecraftItem mItem;
+    private MinecraftOption mItem;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +38,24 @@ public class MinecraftOptionDetailActivity extends FragmentActivity {
 			mItem = MinecraftContent.ITEM_MAP.get(getIntent().getExtras().getString("item_id"));
 			setTitle(mItem.content);
 			
+			Bundle arguments = getIntent().getExtras().getBundle("arguments");
+			fragment.setArguments(arguments);
+			
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.minecraftoption_detail_container, fragment)
                     .commit();
-        }
+        } else {
+        	mItem = MinecraftContent.ITEM_MAP.get(savedInstanceState.getString("item_id"));
+			setTitle(mItem.content);
+		}
     }
-
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    	super.onSaveInstanceState(outState);
+    	outState.putString("item_id", mItem.id);
+    }
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

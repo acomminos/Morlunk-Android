@@ -1,5 +1,8 @@
 package com.acomminos.morlunk.account.minecraft;
 
+import java.util.List;
+
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,13 +24,19 @@ import com.acomminos.morlunk.http.MorlunkRequest.MorlunkRequestType;
 import com.acomminos.morlunk.http.MorlunkRequestLoader;
 import com.acomminos.morlunk.http.MorlunkResponse;
 import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
+import com.acomminos.morlunk.http.response.MorlunkMinecraftAccount;
 import com.acomminos.morlunk.http.response.MorlunkMinecraftAccountResponse;
+import com.acomminos.morlunk.http.response.MorlunkMinecraftStashItem;
+import com.acomminos.morlunk.http.response.MorlunkMinecraftStashResponse;
 
 public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderCallbacks<MorlunkResponse>, MorlunkAccountListener {
 	
 	private static final String MINECRAFT_ACCOUNT_API_URL = "http://www.morlunk.com/minecraft/account/json";
-	private static final int MINECRAFT_ACCOUNT_LOADER_ID = 235; // RANDINT!
+	private static final String MINECRAFT_STASH_API_URL = "http://www.morlunk.com/minecraft/stash/get";
+	private static final int MINECRAFT_ACCOUNT_LOADER_ID = 235;
 	private static final int MINECRAFT_STASH_LOADER_ID = 236;
+	
+	private MorlunkMinecraftAccount account;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -53,12 +62,7 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 		
 		// Set custom username font for title
 		Typeface mineType = Typeface.createFromAsset(getActivity().getAssets(),"fonts/minecraft_font.ttf"); 
-		((TextView)getView().findViewById(R.id.minecraft_account_text)).setTypeface(mineType);
-		
-		// TODO remove testing code
-		GridView gridView = (GridView) getView().findViewById(R.id.inventory_gridview);
-		gridView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new String[] { "64 Obsidian", "64 Glass", "32 Dirt", "16 Diamond" }));
-	
+		((TextView)getView().findViewById(R.id.minecraft_account_text)).setTypeface(mineType);	
 	}
 	
 	/**
@@ -84,9 +88,17 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 	
 	@Override
 	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
-		MorlunkRequest request = new MorlunkRequest(MINECRAFT_ACCOUNT_API_URL, MorlunkRequestType.REQUEST_GET, MorlunkMinecraftAccountResponse.class);
-		MorlunkRequestLoader task = new MorlunkRequestLoader(getActivity(), request);
-		return task;
+		if(arg0 == MINECRAFT_ACCOUNT_LOADER_ID) {
+			MorlunkRequest request = new MorlunkRequest(MINECRAFT_ACCOUNT_API_URL, MorlunkRequestType.REQUEST_GET, MorlunkMinecraftAccountResponse.class);
+			MorlunkRequestLoader task = new MorlunkRequestLoader(getActivity(), request);
+			return task;
+		} else if(arg0 == MINECRAFT_STASH_LOADER_ID) {
+			MorlunkRequest request = new MorlunkRequest(MINECRAFT_STASH_API_URL, MorlunkRequestType.REQUEST_GET, MorlunkMinecraftStashResponse.class);
+			request.addArgument("username", account.minecraftUsername);
+			MorlunkRequestLoader task = new MorlunkRequestLoader(getActivity(), request);
+			return task;
+		}
+		return null;
 	}
 
 	@Override
@@ -99,7 +111,12 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 				TextView accountView = (TextView) getView().findViewById(R.id.minecraft_account_text);
 				accountView.setText(accountResponse.account.minecraftUsername);
 				TextView paososView = (TextView) getView().findViewById(R.id.minecraft_account_paosos);
-				paososView.setText("$"+accountResponse.account.paosos+" Paosos");
+				paososView.setText(accountResponse.account.paosos+"P");
+				
+				account = accountResponse.account;
+				
+				// Load stash now
+				loadMinecraftStash(false);
 			} else if(arg1.result == MorlunkRequestResult.NO_USER) {
 				// No minecraft user
 			} else if(arg1.result == MorlunkRequestResult.NOT_AUTHENTICATED) {
@@ -110,9 +127,10 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 			}
 		} else if(arg0.getId() == MINECRAFT_STASH_LOADER_ID) {
 			if(arg1.result == MorlunkRequestResult.SUCCESS) {
+				MorlunkMinecraftStashResponse stashResponse = (MorlunkMinecraftStashResponse) arg1;
 				// Populate items
 				GridView gridView = (GridView) getView().findViewById(R.id.inventory_gridview);
-				gridView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new String[] { "Item1", "Item2", "Item3" }));
+				gridView.setAdapter(new MorlunkMinecraftStashAdapter(getActivity(), stashResponse.stash.items));
 			}
 		}
 	}
@@ -137,5 +155,32 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 	@Override
 	public void onLoginCancel() {
 		getActivity().finish();
+	}
+	
+	class MorlunkMinecraftStashAdapter extends ArrayAdapter<MorlunkMinecraftStashItem> {
+
+		public MorlunkMinecraftStashAdapter(Context context, List<MorlunkMinecraftStashItem> objects) {
+			super(context, 0, objects);
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View itemView = convertView;
+			if(itemView == null) {
+				LayoutInflater inflater = getLayoutInflater(null);
+				itemView = inflater.inflate(R.layout.list_item_stash, parent, false);
+			}
+			
+			MorlunkMinecraftStashItem item = getItem(position);
+			
+			TextView titleView = (TextView)itemView.findViewById(R.id.stash_item_name);
+			titleView.setText(item.name);
+			
+			TextView quantityView = (TextView)itemView.findViewById(R.id.stash_item_amount);
+			quantityView.setText("Quantity: "+item.amount);
+			
+			return itemView;
+		}
+		
 	}
 }

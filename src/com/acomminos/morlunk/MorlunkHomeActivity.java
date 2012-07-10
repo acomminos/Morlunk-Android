@@ -14,7 +14,6 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 
 import com.acomminos.morlunk.MorlunkBlogFragment.MorlunkBlogFragmentListener;
-import com.acomminos.morlunk.account.MorlunkAccountManager;
 import com.acomminos.morlunk.account.minecraft.MinecraftOptionListActivity;
 import com.acomminos.morlunk.http.response.MorlunkBlogPost;
 import com.acomminos.morlunk.notify.MorlunkNotificationManager;

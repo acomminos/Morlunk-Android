@@ -34,7 +34,6 @@
         android:layout_alignBottom="@+id/store_item_quantity"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="100 P"
-        android:textStyle="bold" />
+        android:text="100P"/>
 
 </RelativeLayout>

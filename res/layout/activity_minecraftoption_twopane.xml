@@ -9,7 +9,7 @@
     android:showDividers="middle"
     tools:context=".MinecraftOptionListActivity">
 
-    <fragment android:name="com.acomminos.morlunk.MinecraftOptionListFragment"
+    <fragment android:name="com.acomminos.morlunk.account.minecraft.MinecraftOptionListFragment"
         android:id="@+id/minecraftoption_list"
         android:layout_width="0dp"
         android:layout_height="match_parent"

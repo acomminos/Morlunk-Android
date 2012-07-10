@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/stash_item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="HOLY SMOKES"
+        android:gravity="center"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/stash_item_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Quantity: 64"
+        android:textStyle="italic"
+        android:gravity="center"
+        android:textColor="@android:color/secondary_text_light"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</LinearLayout>

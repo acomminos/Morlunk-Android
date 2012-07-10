@@ -1,4 +1,4 @@
-package com.acomminos.morlunk.account.minecraft;
+package com.acomminos.morlunk.http.response;
 
 import com.google.gson.annotations.SerializedName;
 

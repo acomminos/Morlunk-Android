@@ -44,17 +44,19 @@
         android:id="@+id/minecraft_account_paosos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0 Paosos" />
+        android:text="0 Paosos" 
+        android:layout_margin="10dp"/>
     
-    <TextView
-        android:layout_width="match_parent"
+    <ImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:text="Stash"
-        android:textAllCaps="true"
-        android:textColor="@android:color/secondary_text_light"
-        android:textStyle="bold" />
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/divider_horizontal_bright" />
 
     <GridView
         android:id="@+id/inventory_gridview"
