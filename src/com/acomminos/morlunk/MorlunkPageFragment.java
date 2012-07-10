@@ -93,7 +93,6 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
 		MorlunkRequest request = new MorlunkRequest(PAGE_API_URL+pageName+"/json", MorlunkRequestType.REQUEST_GET, MorlunkPageResponse.class);
 		MorlunkRequestLoader loader = new MorlunkRequestLoader(getActivity(), request);
-		loader.forceLoad(); // Not sure why this is needed. But it doesn't work without it. TODO fix. -AC
 		return loader;
 	}
 

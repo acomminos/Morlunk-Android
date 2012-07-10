@@ -13,7 +13,6 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
-import android.webkit.CookieSyncManager;
 
 import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.google.gson.Gson;
@@ -47,6 +46,12 @@ public class MorlunkRequestLoader extends AsyncTaskLoader<MorlunkResponse>{
 	}
 	
 	@Override
+	protected void onStartLoading() {
+		super.onStartLoading();
+		forceLoad();
+	}
+	
+	@Override
 	public MorlunkResponse loadInBackground() {
 		HttpUriRequest request = null;
 		try {
@@ -61,7 +66,6 @@ public class MorlunkRequestLoader extends AsyncTaskLoader<MorlunkResponse>{
 			}
 			ResponseHandler<String> handler = new BasicResponseHandler();
 			HttpResponse response = client.execute(request);
-			CookieSyncManager.getInstance().sync(); // Sync cookies TODO fix, does nothing
 			
 			String jsonResponse = handler.handleResponse(response);
 			

@@ -37,11 +37,6 @@ public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.O
         
         setContentView(R.layout.activity_morlunk);
         
-        // Create account manager
-        if(MorlunkAccountManager.getInstance() == null) {
-        	MorlunkAccountManager.createInstance(this, getSupportLoaderManager());
-        }
-        
         // Setup notification manager
         if(MorlunkNotificationManager.getInstance() == null) {
         	MorlunkNotificationManager manager = MorlunkNotificationManager.createInstance(this);

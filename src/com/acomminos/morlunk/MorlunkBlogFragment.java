@@ -75,7 +75,6 @@ public class MorlunkBlogFragment extends ListFragment implements LoaderCallbacks
 	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
 		MorlunkRequest request = new MorlunkRequest(BLOG_API_URL, MorlunkRequestType.REQUEST_GET, MorlunkBlogResponse.class);
 		MorlunkRequestLoader requestTask = new MorlunkRequestLoader(getActivity(), request);
-		requestTask.forceLoad(); // Not sure why this is needed. But it doesn't work without it. TODO fix. -AC
 		return requestTask;
 	}
 

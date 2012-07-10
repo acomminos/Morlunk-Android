@@ -1,8 +1,5 @@
 package com.acomminos.morlunk.account;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -27,7 +24,7 @@ import com.acomminos.morlunk.http.MorlunkRequestLoader;
 import com.acomminos.morlunk.http.MorlunkResponse;
 import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 
-public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
+public class MorlunkAccountManager {
 	
 	/**
 	 * Interface for fragments and activities that need to listen to login requests to implement.
@@ -41,19 +38,110 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 		public void onLoginCancel();
 	}
 	
+	public class MorlunkAuthenticator implements LoaderCallbacks<MorlunkResponse> {
+		
+		private Context context;
+		private ProgressDialog progressDialog;
+		private MorlunkAccountListener accountListener;
+		private LoaderManager loaderManager;
+		
+		public MorlunkAuthenticator(MorlunkAccountListener accountListener, Context context, LoaderManager loaderManager) {
+			this.context = context;
+			this.accountListener = accountListener;
+			this.loaderManager = loaderManager;
+			
+			this.progressDialog = new ProgressDialog(context);
+			this.progressDialog.setTitle("Please Wait");
+			this.progressDialog.setMessage("Connecting to Morlunk.com...");
+			this.progressDialog.setIndeterminate(true);
+			this.progressDialog.setCancelable(false);
+		}
+		
+		public void start(String username, String password) {
+			Bundle args = new Bundle();
+			args.putString(LOGIN_USERNAME_KEY, username);
+			args.putString(LOGIN_PASSWORD_KEY, password);
+			// Restart to get new post data
+			loaderManager.restartLoader(LOGIN_LOADER_ID, args, this);
+		}
+		
+		/**
+		 * Show login alert and sets up hooks.
+		 */
+		private void showLoginAlert() {
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+			alertDialog.setTitle("Login to Morlunk Co.");
+			View alertView = ((LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.account_text_alert, null);
+			final EditText usernameField = (EditText) alertView.findViewById(R.id.account_alert_username);
+			final EditText passwordField = (EditText) alertView.findViewById(R.id.account_alert_password);
+			final CheckBox rememberBox = (CheckBox) alertView.findViewById(R.id.account_remember_checkbox);
+			
+			alertDialog.setView(alertView);
+			alertDialog.setPositiveButton("Login", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					login(usernameField.getText().toString(), passwordField.getText().toString(), rememberBox.isChecked(), accountListener, context, loaderManager);
+					dialog.dismiss();
+				}
+			});
+			alertDialog.setOnCancelListener(new OnCancelListener() {
+				
+				@Override
+				public void onCancel(DialogInterface arg0) {
+					accountListener.onLoginCancel();
+				}
+			});
+			alertDialog.create().show();
+		}
+		
+		@Override
+		public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
+			// Show loading dialog
+			this.progressDialog.show();
+			
+			String username = arg1.getString("username");
+			String password = arg1.getString("password");
+			
+			MorlunkRequest loginRequest = new MorlunkRequest(LOGIN_API_URL, MorlunkRequestType.REQUEST_POST, MorlunkResponse.class);
+			loginRequest.addArgument("username", username);
+			loginRequest.addArgument("password", password);
+			
+			MorlunkRequestLoader requestTask = new MorlunkRequestLoader(context, loginRequest);
+			return requestTask;
+		}
+		
+		@Override
+		public void onLoadFinished(Loader<MorlunkResponse> arg0,
+				MorlunkResponse arg1) {
+			if(arg0.getId() == LOGIN_LOADER_ID) {
+				// Close loading dialog
+				this.progressDialog.dismiss();
+
+				if (arg1.result == MorlunkRequestResult.SUCCESS) {
+					accountListener.onLoginSuccess(arg1);
+				} else {
+					showLoginAlert();
+					accountListener.onLoginFailure(arg1);
+				}
+			}
+		}
+
+		@Override
+		public void onLoaderReset(Loader<MorlunkResponse> arg0) {
+			
+		}
+	}
+
+	private static final String LOGIN_API_URL = "http://www.morlunk.com/account/login/json";
 	private static final String LOGIN_PREFERENCES_FILE = "morlunk_login.xml";
 	private static final String LOGIN_USERNAME_KEY = "username";
 	private static final String LOGIN_PASSWORD_KEY = "password";
 	
-	private static final String LOGIN_API_URL = "http://www.morlunk.com/account/login/json";
-	private static final int LOGIN_LOADER_ID = 1337;
+	private static final int LOGIN_LOADER_ID = 42;
 	
 	private Context context;
-	private LoaderManager loaderManager;
 	private SharedPreferences loginPreferences;
-	private ProgressDialog progressDialog;
-	
-	private List<MorlunkAccountListener> accountListeners = new ArrayList<MorlunkAccountListener>();
 	
 	private static MorlunkAccountManager accountManager;
 	
@@ -64,8 +152,8 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 	 * @param loaderManager
 	 * @return
 	 */
-	public static MorlunkAccountManager createInstance(Context context, LoaderManager loaderManager) {
-		accountManager = new MorlunkAccountManager(context, loaderManager);
+	public static MorlunkAccountManager createInstance(Context context) {
+		accountManager = new MorlunkAccountManager(context);
 		return accountManager;
 	}
 	
@@ -77,25 +165,18 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 		return accountManager;
 	}
 	
-	private MorlunkAccountManager(Context context, LoaderManager loaderManager) {
+	private MorlunkAccountManager(Context context) {
 		this.context = context;
-		this.loaderManager = loaderManager;
-		this.loginPreferences = context.getSharedPreferences(LOGIN_PREFERENCES_FILE, 0);
-		
-		this.progressDialog = new ProgressDialog(context);
-		this.progressDialog.setTitle("Please Wait");
-		this.progressDialog.setMessage("Connecting to Morlunk.com...");
-		this.progressDialog.setIndeterminate(true);
-		this.progressDialog.setCancelable(false);
+		this.loginPreferences = this.context.getSharedPreferences(LOGIN_PREFERENCES_FILE, 0);
 	}
 	
 	/**
 	 * Attempts to login with the stored username and password, if any.
 	 */
-	public void login() {
+	public void login(MorlunkAccountListener listener, Context context, LoaderManager loaderManager) {
 		String username = loginPreferences.getString(LOGIN_USERNAME_KEY, "");
 		String password = loginPreferences.getString(LOGIN_PASSWORD_KEY, "");
-		login(username, password, false);
+		login(username, password, false, listener, context, loaderManager);
 	}
 	
 	/**
@@ -118,18 +199,16 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 	 * @param username
 	 * @param password
 	 * @param remember
+	 * @return The authenticator object performing authentication.
 	 */
-	private void login(String username, String password, boolean remember) {
+	private MorlunkAuthenticator login(String username, String password, boolean remember, MorlunkAccountListener listener, Context context, LoaderManager loaderManager) {
 		if(remember) {
 			storeCredentials(username, password);
 		}
 		
-		Bundle args = new Bundle();
-		args.putString(LOGIN_USERNAME_KEY, username);
-		args.putString(LOGIN_PASSWORD_KEY, password);
-		
-		// Restart to get new post data
-		loaderManager.restartLoader(LOGIN_LOADER_ID, args, this);
+		MorlunkAuthenticator authenticator = new MorlunkAuthenticator(listener, context, loaderManager);
+		authenticator.start(username, password);
+		return authenticator;
 	}
 	
 	/**
@@ -142,92 +221,5 @@ public class MorlunkAccountManager implements LoaderCallbacks<MorlunkResponse>{
 		preferenceEditor.putString(LOGIN_USERNAME_KEY, username);
 		preferenceEditor.putString(LOGIN_PASSWORD_KEY, password);
 		preferenceEditor.commit();
-	}
-	
-	/**
-	 * Show login alert and sets up hooks.
-	 */
-	private void showLoginAlert() {
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-		alertDialog.setTitle("Login to Morlunk Co.");
-		View alertView = ((LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.account_text_alert, null);
-		final EditText usernameField = (EditText) alertView.findViewById(R.id.account_alert_username);
-		final EditText passwordField = (EditText) alertView.findViewById(R.id.account_alert_password);
-		final CheckBox rememberBox = (CheckBox) alertView.findViewById(R.id.account_remember_checkbox);
-		
-		alertDialog.setView(alertView);
-		alertDialog.setPositiveButton("Login", new OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				login(usernameField.getText().toString(), passwordField.getText().toString(), rememberBox.isChecked());
-				dialog.dismiss();
-			}
-		});
-		alertDialog.setOnCancelListener(new OnCancelListener() {
-			
-			@Override
-			public void onCancel(DialogInterface arg0) {
-				// Tell listener to cancel
-				for (MorlunkAccountListener listener : accountListeners) {
-					listener.onLoginCancel();
-				}
-				
-			}
-		});
-		alertDialog.create().show();
-	}
-
-	@Override
-	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
-		// Show loading dialog
-		this.progressDialog.show();
-		
-		String username = arg1.getString("username");
-		String password = arg1.getString("password");
-		
-		MorlunkRequest loginRequest = new MorlunkRequest(LOGIN_API_URL, MorlunkRequestType.REQUEST_POST, MorlunkResponse.class);
-		loginRequest.addArgument("username", username);
-		loginRequest.addArgument("password", password);
-		
-		MorlunkRequestLoader requestTask = new MorlunkRequestLoader(context, loginRequest);
-		requestTask.forceLoad();
-		return requestTask;
-	}
-
-	@Override
-	public void onLoadFinished(Loader<MorlunkResponse> arg0,
-			MorlunkResponse arg1) {
-		// Close loading dialog
-		this.progressDialog.dismiss();
-
-		if (arg1.result == MorlunkRequestResult.SUCCESS) {
-			for (MorlunkAccountListener listener : accountListeners) {
-				listener.onLoginSuccess(arg1);
-			}
-		} else {
-			showLoginAlert();
-			for (MorlunkAccountListener listener : accountListeners) {
-				listener.onLoginFailure(arg1);
-			}
-		}
-	}
-
-	@Override
-	public void onLoaderReset(Loader<MorlunkResponse> arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void registerAccountListener(MorlunkAccountListener listener) {
-		if(!accountListeners.contains(listener)) {
-			accountListeners.add(listener);
-		}
-	}
-	
-	public void unregisterAccountListener(MorlunkAccountListener listener) {
-		if(accountListeners.contains(listener)) {
-			accountListeners.remove(listener);
-		}
 	}
 }

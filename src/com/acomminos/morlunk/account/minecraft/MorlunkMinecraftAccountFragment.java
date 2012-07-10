@@ -32,20 +32,12 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		loadMinecraftAccount(false);
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		MorlunkAccountManager.getInstance().registerAccountListener(this);
-		loadMinecraftAccount(false);
-	}
-	
-	@Override
-	public void onDestroy() {
-		MorlunkAccountManager.getInstance().unregisterAccountListener(this);
-		super.onDestroy();
 	}
 	
 	@Override
@@ -94,7 +86,6 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 	public Loader<MorlunkResponse> onCreateLoader(int arg0, Bundle arg1) {
 		MorlunkRequest request = new MorlunkRequest(MINECRAFT_ACCOUNT_API_URL, MorlunkRequestType.REQUEST_GET, MorlunkMinecraftAccountResponse.class);
 		MorlunkRequestLoader task = new MorlunkRequestLoader(getActivity(), request);
-		task.forceLoad(); // TODO fix this
 		return task;
 	}
 
@@ -113,7 +104,7 @@ public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderC
 				// No minecraft user
 			} else if(arg1.result == MorlunkRequestResult.NOT_AUTHENTICATED) {
 				// Login, the minecraft account will be retrieved after initial auth
-				MorlunkAccountManager.getInstance().login();
+				MorlunkAccountManager.getInstance().login(this, getActivity(), getLoaderManager());
 			} else {
 				// Popup with generic error
 			}
