@@ -3,15 +3,15 @@ package com.acomminos.morlunk.account.minecraft;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
-import android.view.MenuItem;
 
 import com.acomminos.morlunk.R;
 import com.acomminos.morlunk.dummy.MinecraftContent;
 import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftOption;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
-public class MinecraftOptionDetailActivity extends FragmentActivity {
+public class MinecraftOptionDetailActivity extends SherlockFragmentActivity {
 
     private MinecraftOption mItem;
     
@@ -20,7 +20,7 @@ public class MinecraftOptionDetailActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_minecraftoption_detail);
         
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
         	@SuppressWarnings("unchecked")

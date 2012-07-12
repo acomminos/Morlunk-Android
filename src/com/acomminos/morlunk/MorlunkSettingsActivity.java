@@ -1,15 +1,17 @@
 package com.acomminos.morlunk;
 
-import com.acomminos.morlunk.account.minecraft.MinecraftOptionListActivity;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.v4.app.NavUtils;
-import android.view.MenuItem;
 
-public class MorlunkSettingsActivity extends Activity {
+import com.acomminos.morlunk.account.minecraft.MinecraftOptionListActivity;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.actionbarsherlock.view.MenuItem;
+
+public class MorlunkSettingsActivity extends SherlockPreferenceActivity {
+	
+	// TODO port to compat lib
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

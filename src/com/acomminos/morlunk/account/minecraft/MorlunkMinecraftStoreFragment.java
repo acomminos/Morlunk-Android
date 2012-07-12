@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -22,13 +21,14 @@ import com.acomminos.morlunk.account.MorlunkAccountManager;
 import com.acomminos.morlunk.account.MorlunkAccountManager.MorlunkAccountListener;
 import com.acomminos.morlunk.http.MorlunkRequest;
 import com.acomminos.morlunk.http.MorlunkRequest.MorlunkRequestType;
+import com.acomminos.morlunk.http.MorlunkRequestLoader;
+import com.acomminos.morlunk.http.MorlunkResponse;
 import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.acomminos.morlunk.http.response.MorlunkMinecraftStoreItem;
 import com.acomminos.morlunk.http.response.MorlunkMinecraftStoreResponse;
-import com.acomminos.morlunk.http.MorlunkRequestLoader;
-import com.acomminos.morlunk.http.MorlunkResponse;
+import com.actionbarsherlock.app.SherlockListFragment;
 
-public class MorlunkMinecraftStoreFragment extends ListFragment implements LoaderCallbacks<MorlunkResponse>, MorlunkAccountListener {
+public class MorlunkMinecraftStoreFragment extends SherlockListFragment implements LoaderCallbacks<MorlunkResponse>, MorlunkAccountListener {
 	
 	private static final String STORE_BUY_API_URL = "http://www.morlunk.com/minecraft/store/buy/";
 	private static final String STORE_ITEMS_API_URL = "http://www.morlunk.com/minecraft/store/json";

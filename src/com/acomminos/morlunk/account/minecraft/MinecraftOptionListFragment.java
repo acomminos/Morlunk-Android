@@ -2,7 +2,6 @@ package com.acomminos.morlunk.account.minecraft;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -10,8 +9,9 @@ import android.widget.ListView;
 
 import com.acomminos.morlunk.dummy.MinecraftContent;
 import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftOption;
+import com.actionbarsherlock.app.SherlockListFragment;
 
-public class MinecraftOptionListFragment extends ListFragment {
+public class MinecraftOptionListFragment extends SherlockListFragment {
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
@@ -36,7 +36,7 @@ public class MinecraftOptionListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setListAdapter(new ArrayAdapter<MinecraftContent.MinecraftOption>(getActivity(),
-                android.R.layout.simple_list_item_activated_1,
+                android.R.layout.simple_list_item_1,
                 android.R.id.text1,
                 MinecraftContent.ITEMS) {
         	@Override

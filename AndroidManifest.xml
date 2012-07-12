@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.acomminos.morlunk"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="2"
+    android:versionName="1.1" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="7"
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,7 +26,7 @@
         <activity android:name=".MorlunkSettingsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.acomminos.morlunk.MorlunkActivity" />
+                android:value="com.acomminos.morlunk.MorlunkHomeActivity" />
         </activity>
 
         <service
@@ -35,20 +35,13 @@
 
             <!-- android:exported="true" -->
         </service>
-
-        <activity
-            android:name=".account.MorlunkAccountActivity"
-            android:label="@string/title_activity_morlunk_account" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.acomminos.morlunk.MorlunkActivity" />
-        </activity>
+        
         <activity
             android:name=".account.minecraft.MinecraftOptionListActivity"
             android:label="@string/title_minecraftoption_list" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.acomminos.morlunk.account.MorlunkAccountActivity" />
+                android:value="com.acomminos.morlunk.MorlunkHomeActivity" />
         </activity>
         <activity
             android:name=".account.minecraft.MinecraftOptionDetailActivity"

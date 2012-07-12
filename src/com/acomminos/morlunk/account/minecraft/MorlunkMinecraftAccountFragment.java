@@ -5,7 +5,6 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -29,8 +28,9 @@ import com.acomminos.morlunk.http.response.MorlunkMinecraftAccount;
 import com.acomminos.morlunk.http.response.MorlunkMinecraftAccountResponse;
 import com.acomminos.morlunk.http.response.MorlunkMinecraftStashItem;
 import com.acomminos.morlunk.http.response.MorlunkMinecraftStashResponse;
+import com.actionbarsherlock.app.SherlockFragment;
 
-public class MorlunkMinecraftAccountFragment extends Fragment implements LoaderCallbacks<MorlunkResponse>, MorlunkAccountListener {
+public class MorlunkMinecraftAccountFragment extends SherlockFragment implements LoaderCallbacks<MorlunkResponse>, MorlunkAccountListener {
 	
 	private static final String MINECRAFT_ACCOUNT_API_URL = "http://www.morlunk.com/minecraft/account/json";
 	private static final String MINECRAFT_STASH_API_URL = "http://www.morlunk.com/minecraft/stash/get";

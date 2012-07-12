@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -27,8 +26,9 @@ import com.acomminos.morlunk.http.MorlunkResponse;
 import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.acomminos.morlunk.http.response.MorlunkBlogPost;
 import com.acomminos.morlunk.http.response.MorlunkBlogResponse;
+import com.actionbarsherlock.app.SherlockListFragment;
 
-public class MorlunkBlogFragment extends ListFragment implements LoaderCallbacks<MorlunkResponse>, OnItemClickListener, Refreshable {
+public class MorlunkBlogFragment extends SherlockListFragment implements LoaderCallbacks<MorlunkResponse>, OnItemClickListener, Refreshable {
 	
 	interface MorlunkBlogFragmentListener {
 		public void onBlogPostSelected(MorlunkBlogPost post);

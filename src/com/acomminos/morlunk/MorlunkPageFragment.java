@@ -3,7 +3,6 @@ package com.acomminos.morlunk;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -20,8 +19,9 @@ import com.acomminos.morlunk.http.MorlunkResponse;
 import com.acomminos.morlunk.http.MorlunkResponse.MorlunkRequestResult;
 import com.acomminos.morlunk.http.response.MorlunkPage;
 import com.acomminos.morlunk.http.response.MorlunkPageResponse;
+import com.actionbarsherlock.app.SherlockFragment;
 
-public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<MorlunkResponse>, Refreshable {
+public class MorlunkPageFragment extends SherlockFragment implements LoaderCallbacks<MorlunkResponse>, Refreshable {
 	
 	private static final String PAGE_API_URL = "http://www.morlunk.com/page/";
 	
@@ -80,7 +80,6 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 	 * @param pageName
 	 */
 	private void loadPage(String pageName, boolean reload) {
-		getActivity().setProgressBarIndeterminateVisibility(true);
 		LoaderManager loaderManager = getLoaderManager();
 		if(reload) {
 			loaderManager.restartLoader(PAGE_LOADER_ID, null, this);
@@ -99,7 +98,6 @@ public class MorlunkPageFragment extends Fragment implements LoaderCallbacks<Mor
 	@Override
 	public void onLoadFinished(Loader<MorlunkResponse> loader,
 			MorlunkResponse response) {
-		getActivity().setProgressBarIndeterminateVisibility(false);
 		if(response != null &&
 				response.result == MorlunkRequestResult.SUCCESS) {
 			// Get response object

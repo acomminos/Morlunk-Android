@@ -1,22 +1,22 @@
 package com.acomminos.morlunk.account.minecraft;
 
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import com.acomminos.morlunk.R;
 import com.acomminos.morlunk.account.MorlunkAccountManager;
 import com.acomminos.morlunk.dummy.MinecraftContent;
 import com.acomminos.morlunk.dummy.MinecraftContent.MinecraftOption;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
-public class MinecraftOptionListActivity extends FragmentActivity
+public class MinecraftOptionListActivity extends SherlockFragmentActivity
         implements MinecraftOptionListFragment.Callbacks, OnNavigationListener {
 
     private boolean mTwoPane;
@@ -26,12 +26,12 @@ public class MinecraftOptionListActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_minecraftoption_list);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
-        getActionBar().setDisplayShowTitleEnabled(false);
-        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        getActionBar().setListNavigationCallbacks(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        getSupportActionBar().setListNavigationCallbacks(new ArrayAdapter<String>(
+                getSupportActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1,
                 new String[]{
@@ -93,7 +93,7 @@ public class MinecraftOptionListActivity extends FragmentActivity
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_morlunk_account, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_morlunk_account, menu);
         return true;
     }
 

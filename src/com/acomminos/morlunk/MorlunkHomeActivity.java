@@ -1,24 +1,23 @@
 package com.acomminos.morlunk;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 
 import com.acomminos.morlunk.MorlunkBlogFragment.MorlunkBlogFragmentListener;
 import com.acomminos.morlunk.account.minecraft.MinecraftOptionListActivity;
 import com.acomminos.morlunk.http.response.MorlunkBlogPost;
 import com.acomminos.morlunk.notify.MorlunkNotificationManager;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
-public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.OnNavigationListener, MorlunkBlogFragmentListener {
+public class MorlunkHomeActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener, MorlunkBlogFragmentListener {
 
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
@@ -31,8 +30,6 @@ public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         
         setContentView(R.layout.activity_morlunk);
         
@@ -43,7 +40,7 @@ public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.O
         }
         
         // Set up the action bar.
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
@@ -76,7 +73,7 @@ public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.O
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-            getActionBar().setSelectedNavigationItem(
+            getSupportActionBar().setSelectedNavigationItem(
                     savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
         }
     }
@@ -84,15 +81,14 @@ public class MorlunkHomeActivity extends FragmentActivity implements ActionBar.O
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_SELECTED_NAVIGATION_ITEM,
-                getActionBar().getSelectedNavigationIndex());
+                getSupportActionBar().getSelectedNavigationIndex());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_morlunk, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_morlunk, menu);
         return true;
     }
-
     
     public boolean onNavigationItemSelected(int position, long id) {
     	Fragment replacementFragment = null;
